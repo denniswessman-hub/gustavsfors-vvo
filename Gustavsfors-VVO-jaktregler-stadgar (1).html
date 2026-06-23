@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#16302A">
+<title>Gustavsfors VVO – Jaktregler & stadgar</title>
+<style>
+  :root{
+    --spruce:#16302A;      /* mörk granskog – struktur */
+    --spruce-2:#1F4036;
+    --moss:#2F5D45;        /* mossgrön – stadgemärken */
+    --blaze:#E5570A;       /* jaktorange – aktiv/accent */
+    --amber:#FBE3AE;       /* dämpad bärnsten – sökträff */
+    --paper:#EDF0EA;       /* björk/grågrön bakgrund */
+    --card:#FFFFFF;
+    --ink:#1B2421;
+    --soft:#5C665E;
+    --line:#D7DDD3;
+    --ring:#E5570A;
+    --shadow:0 1px 2px rgba(22,48,42,.06), 0 6px 18px rgba(22,48,42,.07);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:16px;line-height:1.5;
+    -webkit-text-size-adjust:100%;
+    padding-bottom:env(safe-area-inset-bottom);
+  }
+  .wrap{max-width:680px;margin:0 auto}
+
+  /* ---------- Masthead ---------- */
+  .masthead{
+    background:linear-gradient(160deg,var(--spruce) 0%,var(--spruce-2) 100%);
+    color:#EAF0EA;
+    padding:22px 18px 20px;
+    padding-top:calc(22px + env(safe-area-inset-top));
+  }
+  .masthead .top{display:flex;align-items:center;gap:12px}
+  .pine{flex:0 0 auto}
+  .eyebrow{
+    font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--blaze);font-weight:700;margin:0 0 2px;
+  }
+  .masthead h1{
+    font-family:Georgia,"Times New Roman",serif;
+    font-weight:700;font-size:25px;line-height:1.12;margin:0;letter-spacing:.01em;
+  }
+  .masthead .sub{margin:14px 0 0;font-size:13.5px;color:#B9C8BD;line-height:1.45}
+  .masthead .sub b{color:#DCE6DE;font-weight:600}
+  .blaze-rule{height:3px;width:46px;background:var(--blaze);border-radius:2px;margin:14px 0 0}
+
+  /* ---------- Toolbar (sticky) ---------- */
+  .toolbar{
+    position:sticky;top:0;z-index:20;
+    background:var(--paper);
+    padding:12px 14px 10px;
+    border-bottom:1px solid var(--line);
+  }
+  .toolbar.scrolled{box-shadow:0 6px 16px rgba(22,48,42,.10)}
+  .search{position:relative}
+  .search svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);opacity:.55}
+  #q{
+    width:100%;border:1.5px solid var(--line);background:var(--card);
+    border-radius:13px;padding:13px 40px 13px 42px;font-size:16px;color:var(--ink);
+    box-shadow:var(--shadow);transition:border-color .15s;
+  }
+  #q::placeholder{color:#9AA59C}
+  #q:focus{outline:none;border-color:var(--ring);box-shadow:0 0 0 3px rgba(229,87,10,.15)}
+  .clear{
+    position:absolute;right:8px;top:50%;transform:translateY(-50%);
+    border:none;background:#E7ECE5;color:var(--soft);width:28px;height:28px;border-radius:50%;
+    font-size:17px;line-height:1;cursor:pointer;display:none;
+  }
+  .clear.show{display:block}
+  .clear:hover{background:#dde4db}
+
+  .tabs{display:flex;gap:6px;margin-top:10px;background:#E2E8DF;padding:4px;border-radius:12px}
+  .tab{
+    flex:1;border:none;background:transparent;color:var(--soft);
+    font-size:14px;font-weight:600;padding:9px 6px;border-radius:9px;cursor:pointer;
+    transition:background .12s,color .12s;
+  }
+  .tab[aria-selected="true"]{background:var(--card);color:var(--spruce);box-shadow:var(--shadow)}
+  .tab .n{font-weight:500;opacity:.7;font-size:12.5px}
+
+  /* ---------- Chips (snabbnavigering §) ---------- */
+  #chips{display:flex;gap:7px;overflow-x:auto;padding:12px 14px 4px;-webkit-overflow-scrolling:touch}
+  #chips::-webkit-scrollbar{display:none}
+  .chip{
+    flex:0 0 auto;border:1px solid var(--line);background:var(--card);color:var(--moss);
+    font-weight:700;font-size:13px;border-radius:20px;padding:7px 13px;cursor:pointer;
+    font-variant-numeric:tabular-nums;
+  }
+  .chip:hover{border-color:var(--moss)}
+
+  /* ---------- Lista ---------- */
+  main{padding:6px 14px 30px}
+  .rescount{font-size:13px;color:var(--soft);padding:10px 2px 4px}
+  .rescount b{color:var(--ink)}
+  .empty{text-align:center;color:var(--soft);padding:46px 20px}
+  .empty .big{font-size:38px;margin-bottom:8px;opacity:.5}
+
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:14px;
+    margin:10px 0;overflow:hidden;box-shadow:var(--shadow);
+  }
+  .card-head{
+    width:100%;display:flex;align-items:center;gap:11px;
+    background:none;border:none;text-align:left;cursor:pointer;
+    padding:14px 14px;color:var(--ink);
+  }
+  .card-head:focus-visible{outline:3px solid var(--ring);outline-offset:-3px;border-radius:14px}
+  .tag{
+    flex:0 0 auto;font-size:11px;font-weight:700;letter-spacing:.04em;
+    padding:4px 8px;border-radius:7px;font-variant-numeric:tabular-nums;white-space:nowrap;
+  }
+  .tag-stadgar{background:#E4EFE7;color:var(--moss)}
+  .tag-jaktregler{background:#FBE6D6;color:#B2480C}
+  .card-title{
+    flex:1;font-family:Georgia,"Times New Roman",serif;font-weight:700;
+    font-size:16.5px;line-height:1.25;
+  }
+  .src{display:block;font-family:-apple-system,sans-serif;font-weight:600;font-size:10.5px;
+    letter-spacing:.1em;text-transform:uppercase;color:var(--soft);margin-bottom:2px}
+  .chev{flex:0 0 auto;width:11px;height:11px;border-right:2px solid var(--soft);
+    border-bottom:2px solid var(--soft);transform:rotate(45deg);transition:transform .18s;margin-top:-4px}
+  .card.open .chev{transform:rotate(225deg);margin-top:2px}
+
+  .card-body{display:none;padding:0 16px 6px;animation:fade .18s ease}
+  .card.open .card-body{display:block}
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+  .card-body p{margin:0 0 12px;font-size:15px;line-height:1.62;color:#27332E}
+  .card-body p:first-child{margin-top:2px}
+  .card-body ul,.card-body ol{margin:0 0 12px;padding-left:22px}
+  .card-body li{font-size:15px;line-height:1.55;margin-bottom:7px;color:#27332E}
+  .sub{font-family:Georgia,serif;font-size:15px;font-weight:700;color:var(--spruce);
+    margin:4px 0 9px;padding-bottom:5px;border-bottom:1px solid var(--line)}
+  .note{font-size:13.5px;color:var(--soft);background:#F4F2E7;border-left:3px solid #D9B24A;
+    padding:9px 12px;border-radius:0 8px 8px 0;line-height:1.5}
+  .note::before{content:"✎ ";color:#B98A1F;font-weight:700}
+  .fill{background:#F4F2E7;border-bottom:1.5px dotted #C99A2E;padding:0 3px;border-radius:3px;
+    font-weight:600;color:#7A5A12}
+
+  mark{background:var(--amber);color:#5A3A04;border-radius:3px;padding:0 1px}
+
+  footer{padding:8px 18px 34px;color:var(--soft);font-size:12px;line-height:1.55;text-align:center}
+  footer a{color:var(--moss)}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important;transition:none !important}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="masthead">
+    <div class="top">
+      <svg class="pine" width="34" height="40" viewBox="0 0 34 40" aria-hidden="true">
+        <path d="M17 2 L25 14 L21 14 L28 24 L23 24 L31 35 L3 35 L11 24 L6 24 L13 14 L9 14 Z" fill="#2F5D45"/>
+        <rect x="15" y="35" width="4" height="5" fill="#6B4A2A"/>
+      </svg>
+      <div>
+        <p class="eyebrow">Viltvårdsområde</p>
+        <h1>Gustavsfors VVO</h1>
+      </div>
+    </div>
+    <div class="blaze-rule"></div>
+    <p class="sub"><b>Jaktregler &amp; stadgar</b> · Bengtsfors kommun, Västra Götalands län. Sök fram en regel direkt – ute i fält eller inför stämman.</p>
+  </header>
+
+  <div class="toolbar" id="toolbar">
+    <div class="search">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16302A" stroke-width="2.2" aria-hidden="true">
+        <circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.5" y2="16.5"></line>
+      </svg>
+      <input id="q" type="search" inputmode="search" autocomplete="off"
+        placeholder="Sök – t.ex. älg, jaktgäst, avgift, trofé" aria-label="Sök i regler och stadgar">
+      <button class="clear" id="clear" aria-label="Rensa sökning">×</button>
+    </div>
+    <div class="tabs" role="tablist" id="tabs">
+      <button class="tab" role="tab" data-doc="jaktregler" aria-selected="true">Jaktregler <span class="n">14</span></button>
+      <button class="tab" role="tab" data-doc="stadgar" aria-selected="false">Stadgar <span class="n">§§ 1–20</span></button>
+    </div>
+  </div>
+
+  <noscript>
+    <div style="margin:12px 14px;padding:11px 13px;background:#F4F2E7;border-left:3px solid #D9B24A;border-radius:0 8px 8px 0;font-size:13.5px;color:#5C665E;line-height:1.5">
+      Sök- och flikfunktionen kräver JavaScript och fungerar inte i den här filvisaren. Allt innehåll visas i stället nedan. Öppna filen i en vanlig webbläsare (Safari/Chrome) för full funktion.
+    </div>
+  </noscript>
+  <div id="chips" hidden></div>
+  <main>
+    <div class="rescount" id="rescount" hidden></div>
+    <div id="list">
+<article class="card open" data-id="ja-0"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-jaktregler">Regel 1</span><span class="card-title"><span class="src">Jaktregler</span>Anmälan av förändringar</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><p>Fastighetsägare ska till styrelsen anmäla eventuella förändringar av jakträttsinnehavare och/eller markareal.</p></div></article>
+<article class="card open" data-id="ja-1"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-jaktregler">Regel 2</span><span class="card-title"><span class="src">Jaktregler</span>Vem som får jaga</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><p>Berättigade till jakt på området är de som innehar jakträttsbevis för småviltsjakt, älg eller annan jakt, eller är gäst till person med jakträttsbevis. Jaktvärd måste medfölja jägare som jagar på gästbevis.</p></div></article>
+<article class="card open" data-id="ja-2"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-jaktregler">Regel 3</span><span class="card-title"><span class="src">Jaktregler</span>Jakträttsbevis och behörighet</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><p>Varje person med jakträtt har rätt att begära bekräftat att en annan jägare inom området har rätt att jaga där, genom att denne uppvisar jakträttsbevis. Jakträttsbevis ska alltid kunna uppvisas vid jakt.</p><p>För jakt krävs även att jägaren har vapenlicens, statligt jaktkort och är jägarförsäkrad.</p></div></article>
+<article class="card open" data-id="ja-3"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-jaktregler">Regel 4</span><span class="card-title"><span class="src">Jaktregler</span>Lagstiftning och etik</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><p>Jakt ska genomföras enligt svensk lagstiftning och de etiska och jägarmässiga regler som tillämpas av Svenska Jägareförbundet.</p></div></article>
+<article class="card open" data-id="ja-4"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-jaktregler">Regel 5</span><span class="card-title"><span class="src">Jaktregler</span>Trofé</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><p>Trofén tillfaller den skytt som först fått in en jägarmässigt godtagbar träff på djuret.</p></div></article>
+<article class="card open" data-id="ja-5"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-jaktregler">Regel 6</span><span class="card-title"><span class="src">Jaktregler</span>Jakttider</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><p>Jakttider är fastställda av regeringen, Naturvårdsverket och Länsstyrelsen, samt de tillägg årsmötet beslutar om rörande tider för älgjakt och andra gemensamhetsjakter.</p></div></article>
+<article class="card open" data-id="ja-6"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-jaktregler">Regel 7</span><span class="card-title"><span class="src">Jaktregler</span>Ingen enskild jakt under gemensamhetsjakt</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><p>Vid de datum då gemensamhetsjakt och älgjakt har utlysts inom viltvårdsområdet får ingen annan enskild områdesjakt utövas – annan jakt får alltså inte utföras dessa dagar, för att inte störa viltet mer.</p></div></article>
+<article class="card open" data-id="ja-7"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-jaktregler">Regel 8</span><span class="card-title"><span class="src">Jaktregler</span>Brott mot licensvillkor eller jaktledarbeslut</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><p>Den som skjuter djur i strid med licensvillkoren, eller mot jaktledarens beslut, avhyses omedelbart från jakt och mister sin andel i det fällda djuret, även trofén. Styrelsen beslutar därefter om uteslutningen ska gälla resterande del av jaktsäsongen.</p></div></article>
+<article class="card open" data-id="ja-8"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-jaktregler">Regel 9</span><span class="card-title"><span class="src">Jaktregler</span>Enskild jakt på utlyst gemensamhetsjaktdag</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><p>Den som påträffas utövande enskild områdesjakt de datum då gemensamhetsjakt eller älgjakt är utlyst ska avhysas från området. Styrelsen beslutar därefter om uteslutningen ska gälla resterande del av jaktsäsongen.</p></div></article>
+<article class="card open" data-id="ja-9"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-jaktregler">Regel 10</span><span class="card-title"><span class="src">Jaktregler</span>Anmälan till älgjakten</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><p>Anmälan om deltagande i älgjakten ska göras hos jaktledaren senast det datum årsmötet beslutat om. När det gäller älgjakt får endast gästjägare som beslutats av årsmötet medfölja.</p></div></article>
+<article class="card open" data-id="ja-10"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-jaktregler">Regel 11</span><span class="card-title"><span class="src">Jaktregler</span>Samling före älgjakten</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><p>Före älgjaktens början, vid tillfälle som jaktledaren bestämt, samlas jaktlaget med jaktledaren för information om gällande bestämmelser och för att besluta om jaktens organisering.</p></div></article>
+<article class="card open" data-id="ja-11"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-jaktregler">Regel 12</span><span class="card-title"><span class="src">Jaktregler</span>Försäkring och skjutprov (älg)</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><p>Var och en som deltar i älgjakten ska vara jägarförsäkrad (hemförsäkring gäller också) och samma år ha skjutit minst bronsfordring enligt reglerna för älgskyttemärket – alternativt ha visat sin skjutförmåga på annat sätt som årsmötet beslutat.</p></div></article>
+<article class="card open" data-id="ja-12"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-jaktregler">Regel 13</span><span class="card-title"><span class="src">Jaktregler</span>Tolk för utländska markägare och arrendatorer</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><p>Markägare som upplåter mark till utländska arrendatorer som inte förstår eller kan göra sig förstådda på svenska ska se till att tolk finns närvarande under jaktdagen/-dagarna. Detsamma gäller utländska markägare.</p></div></article>
+<article class="card open" data-id="ja-13"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-jaktregler">Regel 14</span><span class="card-title"><span class="src">Jaktregler</span>Jaktgäst</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><p>Jakträttsinnehavaren ska medfölja sin jaktgäst. Endast en jaktgäst per jakträttsinnehavare och dag.</p></div></article>
+<article class="card open" data-id="st-14"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-stadgar">Om</span><span class="card-title"><span class="src">Stadgar</span>Om föreningen och stadgarna</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><p>Normalstadgar för viltvårdsområdesförening (Svenska Jägareförbundet). Föreningen förvaltar Gustavsfors viltvårdsområde i Bengtsfors kommun, Västra Götalands län.</p><p>För området gäller lag (2000:592) om viltvårdsområden. Området var tidigare jaktvårdsområde och övergick till viltvårdsområde när lagen trädde i kraft den 1 januari 2001. Länsstyrelsen har fastställt §§ 1–9 samt 18–20 (dnr 27-45408-2001).</p><p class="note">Vissa värden i stadgarna är ifyllda för hand i originalet. De återges här efter bästa förmåga och är markerade. Kontrollera alltid mot originalhandlingen vid tveksamhet.</p></div></article>
+<article class="card open" data-id="st-15"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-stadgar">Ordlista</span><span class="card-title"><span class="src">Stadgar</span>Definitioner</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><ul><li><b>Områdesjakt:</b> jakt inom hela viltvårdsområdet oberoende av fastighetsgränserna.</li><li><b>Gemensamhetsjakt:</b> jakt får inte bedrivas enskilt, utan endast tillsammans med övriga jakträttshavare.</li><li><b>Fastighet:</b> med fastighet avses även del av fastighet.</li></ul></div></article>
+<article class="card open" data-id="st-16"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-stadgar">Område</span><span class="card-title"><span class="src">Stadgar</span>Omfattning och beståndstid</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><p>Viltvårdsområdet består av de fastigheter (delar av fastigheter) och samfälligheter som anges i länsstyrelsens beslut eller bilaga. Tillhörande vattenområden ingår om inte annat anges. Anslutning eller uteslutning av fastighet framgår av fastighetsförteckningen, som hålls aktuell genom föreningen.</p><p>Viltvårdsområdet består till dess länsstyrelsen beslutar om föreningens upplösning. Ett sådant beslut får inte meddelas innan tre år förflutit från det att beslutet om bildande vann laga kraft.</p></div></article>
+<article class="card open" data-id="st-17"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-stadgar">§ 1</span><span class="card-title"><span class="src">Stadgar</span>Ändamål och medlemskap</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><p>Föreningens syfte är att främja viltvården genom samordning av jakten och åtgärder till skydd och stöd för viltet.</p><p>Den som äger en fastighet som ingår i viltvårdsområdet är medlem i föreningen och kallas fastighetsägare.</p><p>Den som genom godkänd upplåtelse har rätt att under minst ett år jaga på en fastighet inom området ska på begäran antas som medlem under upplåtelsetiden, om inte särskilda skäl föranleder annat.</p></div></article>
+<article class="card open" data-id="st-18"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-stadgar">§ 2</span><span class="card-title"><span class="src">Stadgar</span>Rösträtt och beslut</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><h4 class="sub">A. Jaktstämma</h4><p>Föreningsstämman – i fortsättningen kallad jaktstämman – är föreningens högsta beslutande instans. Medlemmarnas rätt att delta i beslut utövas på jaktstämma.</p><p>Endast medlemmar som är fastighetsägare har rösträtt i frågor som rör:</p><ul><li>områdesjakt och gemensamhetsjakt – samt beslut om avskjutningens omfattning och inriktning,</li><li>jakträttsbevis för områdesjakt och gemensamhetsjakt,</li><li>tillstånd för upplåtelse och överlåtelse av jakträtt,</li><li>fridlysning av fastighet vars ägare av ideella skäl motsätter sig jakt,</li><li>avgifter för jakten inom viltvårdsområdet och för vilt som fälls.</li></ul><p>I övriga frågor har alla medlemmar rösträtt. Rösträtt utövas personligen, genom ombud eller genom behörig företrädare.</p><p>Varje medlem har en röst. På begäran av fastighetsägare ska röstetalet i frågor där endast fastighetsägare har rösträtt i stället beräknas efter fastigheternas areal: en röst för varje påbörjat <span class="fill" title="Ifylld för hand i originalet – verifiera">100</span>-tal hektar. Ingen får rösta för mer än en femtedel av det på stämman företrädda röstetalet – begränsningen omfattar även röstning med fullmakt.</p><p>Som jaktstämmans beslut gäller den mening som fått det högsta röstetalet. Vid lika röstetal avgörs val genom lottning; i andra frågor gäller den mening som <span class="fill" title="Ifylld för hand i originalet – verifiera">stöds av de flesta röstande, eller – om antalet röstande är lika –</span> biträds av stämmans ordförande. Är ordföranden ej röstberättigad avgörs frågan genom lottning.</p><p class="note">I originalet är meningen om utslagsröst handskrivet ändrad. Återges enligt tillägget ovan; verifiera mot originalet.</p><p>Medlem har yttrande- och förslagsrätt även i frågor där han inte har rösträtt.</p><h4 class="sub">B. Styrelse</h4><p>För föreningen finns en styrelse. Fastighetsägarna utser på jaktstämma ordförande och övriga ledamöter. Ledamöter och suppleanter ska vara medlemmar i föreningen. Minst halva antalet ledamöter ska vara fastighetsägare eller ställföreträdare för fastighetsägare.</p><p>Styrelsen är beslutsför när fler än hälften av ledamöterna är närvarande. Som styrelsens beslut gäller den mening som fått de flesta rösterna, eller vid lika röstetal den mening som biträds av ordföranden.</p></div></article>
+<article class="card open" data-id="st-19"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-stadgar">§ 3</span><span class="card-title"><span class="src">Stadgar</span>Jaktutövning</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><h4 class="sub">A. Jakt efter älg</h4><p>Älgjakten bedrivs som gemensamhetsjakt – en för de jaktberättigade gemensam angelägenhet – eller som jakt inom egen sektion.</p><p>Gemensamhetsjakten ska organiseras och ledas av jaktledare som utses av jaktstämman, eller på dess uppdrag av styrelsen. För jaktledare ska finnas av jaktstämman fastställd instruktion. Deltagare är skyldig att följa jaktledarens anvisningar.</p><p>Jaktstämman beslutar om villkoren för deltagande, avskjutningens omfattning och inriktning, tid och sätt för jaktutövningen samt grunderna för fördelning av jaktbyte.</p><p>Jaktberättigade som ensamma eller tillsammans har jakträtt på ett område om minst <span class="fill" title="Ifylld för hand i originalet – verifiera">1 000</span> hektar, lämpligt att utgöra egen sektion, kan förbehålla sig älgjakten där, om det inte är olämpligt från viltvårdssynpunkt. Jaktstämman beslutar om sektionsindelning. Egen sektion utser själv jaktledare och beslutar om tid, sätt och fördelning av jaktbyte; i övrigt beslutar jaktstämman.</p><h4 class="sub">B. Jakt efter annat vilt än älg (övrig jakt)</h4><p>Jakten bedrivs av envar jaktberättigad inom hela viltvårdsområdet – områdesjakt. (Alternativet med jakt enbart på eget område är överstruket i originalet.)</p><p>Jaktberättigade som ensamma eller tillsammans har jakträtt på ett område om minst <span class="fill" title="Ifylld för hand i originalet – verifiera">1 000</span> hektar kan förbehålla sig jakt där, om det inte är olämpligt från viltvårdssynpunkt. De som har rätt till jakt inom särskild sektion har jaktutövningsrätt inom hela sektionen.</p><p>Jaktstämman beslutar om avskjutningens omfattning och inriktning.</p><p>För områdesjakt efter björn, järv, varg, lo och vildsvin får jaktstämman besluta om sådan jakt endast om det uppenbart behövs för att begränsa skador av sådant vilt. Beslutet ska fattas årligen på årsstämma.</p></div></article>
+<article class="card open" data-id="st-20"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-stadgar">§ 4</span><span class="card-title"><span class="src">Stadgar</span>Jakträttsbevis och jaktgästbevis</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><p>För jakt inom viltvårdsområdet som bedrivs som områdesjakt och/eller gemensamhetsjakt krävs jakträttsbevis eller jaktgästbevis i den utsträckning som anges i denna paragraf. Bevis utfärdas av den som stämman eller styrelsen utser.</p><p>Allt efter sin i viltvårdsområdet ingående areal är varje jakträttshavare berättigad att lösa ett för jakt efter älg gällande jakträttsbevis för varje fulla <span class="fill" title="Ifylld för hand i originalet – verifiera">40</span> hektar och/eller ett för övrig jakt gällande jakträttsbevis för varje fulla <span class="fill" title="Ifylld för hand i originalet – verifiera">40</span> hektar. (Alternativ II tillämpas; alternativ I är överstruket.)</p><p>Den som har jakträtt genom avtal ska för varje jakträttsbevis disponera jakt på minst det antal hektar som anges ovan.</p><p>Jaktberättigad kan, på de villkor jaktstämman beslutar, få särskilt jakträttsbevis avseende viss viltart eller jakt under viss tid. Jaktgästbevis får lösas på de villkor och i den omfattning jaktstämman beslutar.</p><p>Vid samäganderätt bör jakträttsbevis ställas ut på delägarna gemensamt, men gäller endast för en delägare i sänder. Ägs fastigheten av dödsbo ställs beviset ut på dödsboet och gäller för en dödsbodelägare i sänder. Ägs den av bolag, förening eller annan juridisk person ställs beviset ut på fysisk person enligt anmälan till styrelsen.</p><p>Jaktstämman kan på ansökan besluta om extra jakträttsbevis när samäganderätts-, dödsboförhållanden eller andra särskilda förhållanden motiverar det.</p><p class="note">Originalet innehåller en handskriven särskild bestämmelse till § 4 (om särskilt jakträttsbevis och utnyttjande inom familjen). Texten är svårtolkad och bör läsas i originalhandlingen.</p></div></article>
+<article class="card open" data-id="st-21"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-stadgar">§ 5</span><span class="card-title"><span class="src">Stadgar</span>Avvisning och avstängning från gemensamhetsjakt</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><p>Jaktledare har rätt att med omedelbar verkan avvisa den som, från fortsatt deltagande i gemensamhetsjakt:</p><ol><li>bryter mot av jaktstämman fastställda regler för jaktutövningen,</li><li>inte följer jaktledares anvisningar,</li><li>handskas vårdslöst med skjutvapen,</li><li>är onykter.</li></ol><p>Jaktledaren ska snarast anmäla en avvisning till styrelsen. Styrelsen kan avstänga en medlem eller jakträttshavare som bryter mot jaktstämmans beslut om avskjutningens omfattning och inriktning, jagar på fridlyst mark eller jagar utan jakträttsbevis. Avstängning får ske för längst ett år. Före beslut ska den berörde få tillfälle att yttra sig.</p></div></article>
+<article class="card open" data-id="st-22"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-stadgar">§ 6</span><span class="card-title"><span class="src">Stadgar</span>Avgifter</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><p>Jaktstämman fastställer avgifter för jakträttsbevis och jaktgästbevis. Avgiften får inte bestämmas till olika belopp för jakträttsbevis av samma slag. För särskilda jakträttsbevis får avgifterna dock sättas olika efter den jaktutövningsrätt beviset medger.</p><p>Avgifternas storlek ska anpassas till och användas för föreningens verksamhet. Jaktstämman kan även besluta om särskilda avgifter för fällt villebråd, vilka enligt stämmans beslut delas ut till fastighetsägarna i proportion till deras arealinnehav inom viltvårdsområdet.</p></div></article>
+<article class="card open" data-id="st-23"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-stadgar">§ 7</span><span class="card-title"><span class="src">Stadgar</span>Upplåtelse och överlåtelse</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><p>Jakträtt och jaktutövningsrätt kan upplåtas eller överlåtas genom (A) avtal om upplåtelse, (B) överlåtelse av jakträttsbevis, eller (C) inbjudan av jaktgäst.</p><h4 class="sub">A. Avtal om upplåtelse av jakträtt m.m.</h4><p>Avtal om upplåtelse ska upprättas skriftligen och godkännas av jaktstämman för att berättiga till jakt inom området. Godkännande får vägras endast om mottagaren inte förfogar över mark av sådan storlek som anges i § 4, eller om upplåtelsen annars är olämplig med hänsyn till viltvården eller till avsevärd olägenhet för medlemmarna.</p><h4 class="sub">B. Överlåtelse av jakträttsbevis</h4><p>Överlåtelse får ske till annan fastighetsägare som löst eget bevis, samt till fastighetsägarens make, föräldrar, syskon, barn, barnbarn och deras makar (samboende), eller till någon som tillhör överlåtarens hushåll eller har fast anställning hos fastighetsägaren. Överlåtelsen ska anmälas till styrelsen.</p><p>Fastighetsägare får överlåta jakträttsbevis till föreningen, som kan vidareöverlåta det. Vid överlåtelse ska mottagarens namn och tiden antecknas på beviset; överlåtelsen är inte giltig utan sådan anteckning, undertecknad av fastighetsägaren.</p><h4 class="sub">C. Inbjudan av jaktgäst</h4><p>Jaktgäster får bjudas in enligt av jaktstämman beslutade regler. Rätten att lösa jaktgästbevis får överlåtas till föreningen, som kan vidareöverlåta det.</p></div></article>
+<article class="card open" data-id="st-24"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-stadgar">§ 8</span><span class="card-title"><span class="src">Stadgar</span>Särskild fridlysning</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><p>På begäran av fastighetsägare som av ideella skäl motsätter sig jakt ska hans fastighet undantas från områdesjakt och gemensamhetsjakt, så länge jakt inte utövas av ägaren själv eller av någon han upplåtit sin rätt till. Ansökan görs hos styrelsen och prövas vid jaktstämma.</p></div></article>
+<article class="card open" data-id="st-25"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-stadgar">§ 9</span><span class="card-title"><span class="src">Stadgar</span>Åtgärder för viltvård</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><p>Fastighetsägare är skyldig att tåla att åtgärder som behövs för viltvården vidtas på hans fastighet, om det inte inskränker hans rätt att jaga eller på annat sätt nyttja en fastighet inom viltvårdsområdet.</p></div></article>
+<article class="card open" data-id="st-26"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-stadgar">§ 10</span><span class="card-title"><span class="src">Stadgar</span>Viltstatistik</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><p>Den som jagat inom området, eller löst eller övertagit jakträttsbevis eller jaktgästbevis, är skyldig att årligen – före den dag styrelsen bestämmer – själv eller genom sin jaktvärd lämna skriftlig uppgift till styrelsen om antalet vilt av varje slag som fällts eller fångats inom området under den tid beviset omfattat.</p></div></article>
+<article class="card open" data-id="st-27"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-stadgar">§ 11</span><span class="card-title"><span class="src">Stadgar</span>Ordinarie jaktstämma</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><p>Ordinarie jaktstämma hålls årligen på tid och plats som styrelsen bestämmer, dock senast den <span class="fill" title="Ifylld för hand i originalet – verifiera">31 augusti</span>. Vid stämman behandlas följande ärenden:</p><ol><li>Val av ordförande för stämman</li><li>Anmälan om protokollförare</li><li>Val av två justeringsmän</li><li>Fråga om stämman utlysts i behörig ordning</li><li>Fastställande av röstlängd</li><li>Styrelsens och revisorernas berättelser samt fråga om ansvarsfrihet för styrelsen</li><li>Fråga om användning av eventuellt överskott från föregående räkenskapsår</li><li>Styrelsens förslag till utgifts- och inkomststat</li><li>Fastställande av regler för jaktutövning och viltvård samt instruktioner för jaktledare</li><li>Fastställande av avgifter för jakträttsbevis, jaktgästbevis samt i förekommande fall för fällt villebråd</li><li>Framställningar från styrelsen och motioner från medlemmarna</li><li>Frågor om föreningens tillstånd för upplåtelse och överlåtelse av jakträtt inom området</li><li>Antagande av medlemmar</li><li>Val av ordförande i styrelsen</li><li>Val av övriga styrelseledamöter jämte suppleanter</li><li>Val av revisorer jämte suppleanter</li><li>Val av de personer som ska utfärda jakträtts- och jaktgästbevis</li><li>Bestämmande av sättet för delgivning av jaktstämmans och styrelsens beslut samt för kallelse till jaktstämma</li><li>Val av valberedning</li><li>(Särskild punkt enligt stämmans beslut)</li><li>Övriga frågor</li></ol></div></article>
+<article class="card open" data-id="st-28"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-stadgar">§ 12</span><span class="card-title"><span class="src">Stadgar</span>Extra jaktstämma</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><p>Extra jaktstämma ska hållas då styrelsen finner anledning till det, eller då det begärs av mer än en femtedel av fastighetsägarna, eller av fastighetsägare som äger mer än en femtedel av viltvårdsområdets areal. Vid extra stämma får beslut fattas endast i ärenden som angetts i kallelsen.</p></div></article>
+<article class="card open" data-id="st-29"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-stadgar">§ 13</span><span class="card-title"><span class="src">Stadgar</span>Kallelse till jaktstämma</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><p>Kallelse till jaktstämma ska ske senast <span class="fill" title="Ifylld för hand i originalet – verifiera">14</span> dagar före stämman.</p></div></article>
+<article class="card open" data-id="st-30"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-stadgar">§ 14</span><span class="card-title"><span class="src">Stadgar</span>Motioner</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><p>Medlem kan genom motion väcka förslag rörande föreningens verksamhet. Motion ska vara styrelsen tillhanda senast under <span class="fill" title="Ifylld för hand i originalet – verifiera">[månad – ifylld för hand]</span>.</p></div></article>
+<article class="card open" data-id="st-31"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-stadgar">§ 15</span><span class="card-title"><span class="src">Stadgar</span>Styrelsen</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><p>Styrelsen ska ha sitt säte i <span class="fill" title="Ifylld för hand i originalet – verifiera">Gustavsfors</span> och bestå av ordförande samt <span class="fill" title="Ifylld för hand i originalet – verifiera">[antal]</span> ledamöter och <span class="fill" title="Ifylld för hand i originalet – verifiera">[antal]</span> suppleanter. Ledamöter och suppleanter utses för ett år i sänder, om inte jaktstämman beslutar annat.</p></div></article>
+<article class="card open" data-id="st-32"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-stadgar">§ 16</span><span class="card-title"><span class="src">Stadgar</span>Styrelsens åligganden</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><p>Styrelsen företräder föreningen, ansvarar för dess tillgångar, förvaltar dess angelägenheter och verkställer jaktstämmans beslut. Det åligger styrelsen:</p><ol><li>att föra noggranna räkenskaper,</li><li>att hålla fastighets- och medlemsförteckning aktuell och före varje jaktstämma upprätta röstlängd,</li><li>att till jaktstämman lämna förslag till viltvårdsåtgärder och regler för jaktutövningen under jaktåret (bl.a. avskjutningens omfattning och inriktning, avgifter för jakträtts- och jaktgästbevis, eventuella avgifter för visst vilt, underlättande av annan jakt under älgjakt samt former för gemensamhetsjakt och krav på skjutprov),</li><li>att genom den stämman utser utfärda och lämna ut jakträtts- och jaktgästbevis,</li><li>att i förekommande fall se till att licensansökningar m.m. ges in till myndighet,</li><li>att ansvara för beslutade viltvårdsinsatser, genomföra jaktbevakning och hålla viltvårdsområdets gränser markerade,</li><li>att medverka till frivilliga byten av jakträtt och arrendering i samordnande syfte, samt avge förslag om överlåtelse av jakträtts- och jaktgästbevis till föreningen och villkoren vid vidareöverlåtelse.</li></ol><p class="note">Ändring av äganderätt till, eller omfattning av, en fastighet i området ska anmälas av ägaren till styrelsen, som för in ändringen i fastighetsförteckningen. Detsamma gäller ändrad fastighetsbeteckning.</p></div></article>
+<article class="card open" data-id="st-33"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-stadgar">§ 17</span><span class="card-title"><span class="src">Stadgar</span>Räkenskapsperiod och revision</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><p>Föreningens räkenskapsperiod omfattar tiden <span class="fill" title="Ifylld för hand i originalet – verifiera">1 juli – 30 juni</span>. För granskning av styrelsens förvaltning och föreningens räkenskaper utses årligen på jaktstämma en eller två revisorer och en eller två suppleanter. Räkenskaperna ska lämnas till revisorn senast 14 dagar efter räkenskapsårets utgång, och revisionen ska vara avslutad före närmast följande ordinarie jaktstämma.</p></div></article>
+<article class="card open" data-id="st-34"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-stadgar">§ 18</span><span class="card-title"><span class="src">Stadgar</span>Överklagande av beslut</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><p>Beslut av jaktstämma eller styrelse kan, i den ordning och omfattning som följer av lagen om viltvårdsområden, överklagas hos länsstyrelsen av den vars rätt berörs av beslutet, om beslutet gått denne emot.</p></div></article>
+<article class="card open" data-id="st-35"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-stadgar">§ 19</span><span class="card-title"><span class="src">Stadgar</span>Ändring av stadgar</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><p>Beslut om ändring av stadgarna fattas på jaktstämma. Beslutet är giltigt endast om det fattats på två på varandra följande stämmor och inte bestrids av mer än en femtedel av fastighetsägarna eller av fastighetsägare som äger mer än en femtedel av arealen. Avser beslutet §§ 1–9 eller 18–20 ska det dessutom fastställas av länsstyrelsen. Ändringsförslaget måste ha funnits med i kallelsen.</p></div></article>
+<article class="card open" data-id="st-36"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-stadgar">§ 20</span><span class="card-title"><span class="src">Stadgar</span>Upplösning av föreningen</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><p>Upplösning av föreningen kan ske på det sätt som anges i lag (2000:592) om viltvårdsområden.</p></div></article>
+</div>
+  </main>
+
+  <footer>
+    Sammanställt ur föreningens jaktregler och normalstadgar (SJF, dnr 27-45408-2001).<br>
+    Handskrivna ifyllnader är <span class="fill">markerade</span> och bör verifieras mot originalet. Lag (2000:592) om viltvårdsområden gäller i övrigt.
+  </footer>
+</div>
+
+<script>
+/* ===== Innehåll ===== */
+const F = (v) => `<span class="fill" title="Ifylld för hand i originalet – verifiera">${v}</span>`;
+
+const DATA = [
+  /* -------- JAKTREGLER -------- */
+  {doc:"jaktregler",tag:"Regel 1",title:"Anmälan av förändringar",blocks:[
+    {t:"p",html:"Fastighetsägare ska till styrelsen anmäla eventuella förändringar av jakträttsinnehavare och/eller markareal."}]},
+  {doc:"jaktregler",tag:"Regel 2",title:"Vem som får jaga",blocks:[
+    {t:"p",html:"Berättigade till jakt på området är de som innehar jakträttsbevis för småviltsjakt, älg eller annan jakt, eller är gäst till person med jakträttsbevis. Jaktvärd måste medfölja jägare som jagar på gästbevis."}]},
+  {doc:"jaktregler",tag:"Regel 3",title:"Jakträttsbevis och behörighet",blocks:[
+    {t:"p",html:"Varje person med jakträtt har rätt att begära bekräftat att en annan jägare inom området har rätt att jaga där, genom att denne uppvisar jakträttsbevis. Jakträttsbevis ska alltid kunna uppvisas vid jakt."},
+    {t:"p",html:"För jakt krävs även att jägaren har vapenlicens, statligt jaktkort och är jägarförsäkrad."}]},
+  {doc:"jaktregler",tag:"Regel 4",title:"Lagstiftning och etik",blocks:[
+    {t:"p",html:"Jakt ska genomföras enligt svensk lagstiftning och de etiska och jägarmässiga regler som tillämpas av Svenska Jägareförbundet."}]},
+  {doc:"jaktregler",tag:"Regel 5",title:"Trofé",blocks:[
+    {t:"p",html:"Trofén tillfaller den skytt som först fått in en jägarmässigt godtagbar träff på djuret."}]},
+  {doc:"jaktregler",tag:"Regel 6",title:"Jakttider",blocks:[
+    {t:"p",html:"Jakttider är fastställda av regeringen, Naturvårdsverket och Länsstyrelsen, samt de tillägg årsmötet beslutar om rörande tider för älgjakt och andra gemensamhetsjakter."}]},
+  {doc:"jaktregler",tag:"Regel 7",title:"Ingen enskild jakt under gemensamhetsjakt",blocks:[
+    {t:"p",html:"Vid de datum då gemensamhetsjakt och älgjakt har utlysts inom viltvårdsområdet får ingen annan enskild områdesjakt utövas – annan jakt får alltså inte utföras dessa dagar, för att inte störa viltet mer."}]},
+  {doc:"jaktregler",tag:"Regel 8",title:"Brott mot licensvillkor eller jaktledarbeslut",blocks:[
+    {t:"p",html:"Den som skjuter djur i strid med licensvillkoren, eller mot jaktledarens beslut, avhyses omedelbart från jakt och mister sin andel i det fällda djuret, även trofén. Styrelsen beslutar därefter om uteslutningen ska gälla resterande del av jaktsäsongen."}]},
+  {doc:"jaktregler",tag:"Regel 9",title:"Enskild jakt på utlyst gemensamhetsjaktdag",blocks:[
+    {t:"p",html:"Den som påträffas utövande enskild områdesjakt de datum då gemensamhetsjakt eller älgjakt är utlyst ska avhysas från området. Styrelsen beslutar därefter om uteslutningen ska gälla resterande del av jaktsäsongen."}]},
+  {doc:"jaktregler",tag:"Regel 10",title:"Anmälan till älgjakten",blocks:[
+    {t:"p",html:"Anmälan om deltagande i älgjakten ska göras hos jaktledaren senast det datum årsmötet beslutat om. När det gäller älgjakt får endast gästjägare som beslutats av årsmötet medfölja."}]},
+  {doc:"jaktregler",tag:"Regel 11",title:"Samling före älgjakten",blocks:[
+    {t:"p",html:"Före älgjaktens början, vid tillfälle som jaktledaren bestämt, samlas jaktlaget med jaktledaren för information om gällande bestämmelser och för att besluta om jaktens organisering."}]},
+  {doc:"jaktregler",tag:"Regel 12",title:"Försäkring och skjutprov (älg)",blocks:[
+    {t:"p",html:"Var och en som deltar i älgjakten ska vara jägarförsäkrad (hemförsäkring gäller också) och samma år ha skjutit minst bronsfordring enligt reglerna för älgskyttemärket – alternativt ha visat sin skjutförmåga på annat sätt som årsmötet beslutat."}]},
+  {doc:"jaktregler",tag:"Regel 13",title:"Tolk för utländska markägare och arrendatorer",blocks:[
+    {t:"p",html:"Markägare som upplåter mark till utländska arrendatorer som inte förstår eller kan göra sig förstådda på svenska ska se till att tolk finns närvarande under jaktdagen/-dagarna. Detsamma gäller utländska markägare."}]},
+  {doc:"jaktregler",tag:"Regel 14",title:"Jaktgäst",blocks:[
+    {t:"p",html:"Jakträttsinnehavaren ska medfölja sin jaktgäst. Endast en jaktgäst per jakträttsinnehavare och dag."}]},
+
+  /* -------- STADGAR: intro -------- */
+  {doc:"stadgar",tag:"Om",title:"Om föreningen och stadgarna",blocks:[
+    {t:"p",html:"Normalstadgar för viltvårdsområdesförening (Svenska Jägareförbundet). Föreningen förvaltar Gustavsfors viltvårdsområde i Bengtsfors kommun, Västra Götalands län."},
+    {t:"p",html:"För området gäller lag (2000:592) om viltvårdsområden. Området var tidigare jaktvårdsområde och övergick till viltvårdsområde när lagen trädde i kraft den 1 januari 2001. Länsstyrelsen har fastställt §§ 1–9 samt 18–20 (dnr 27-45408-2001)."},
+    {t:"note",html:"Vissa värden i stadgarna är ifyllda för hand i originalet. De återges här efter bästa förmåga och är markerade. Kontrollera alltid mot originalhandlingen vid tveksamhet."}]},
+  {doc:"stadgar",tag:"Ordlista",title:"Definitioner",blocks:[
+    {t:"ul",items:[
+      "<b>Områdesjakt:</b> jakt inom hela viltvårdsområdet oberoende av fastighetsgränserna.",
+      "<b>Gemensamhetsjakt:</b> jakt får inte bedrivas enskilt, utan endast tillsammans med övriga jakträttshavare.",
+      "<b>Fastighet:</b> med fastighet avses även del av fastighet."]}]},
+  {doc:"stadgar",tag:"Område",title:"Omfattning och beståndstid",blocks:[
+    {t:"p",html:"Viltvårdsområdet består av de fastigheter (delar av fastigheter) och samfälligheter som anges i länsstyrelsens beslut eller bilaga. Tillhörande vattenområden ingår om inte annat anges. Anslutning eller uteslutning av fastighet framgår av fastighetsförteckningen, som hålls aktuell genom föreningen."},
+    {t:"p",html:"Viltvårdsområdet består till dess länsstyrelsen beslutar om föreningens upplösning. Ett sådant beslut får inte meddelas innan tre år förflutit från det att beslutet om bildande vann laga kraft."}]},
+
+  /* -------- STADGAR §§ -------- */
+  {doc:"stadgar",tag:"§ 1",title:"Ändamål och medlemskap",blocks:[
+    {t:"p",html:"Föreningens syfte är att främja viltvården genom samordning av jakten och åtgärder till skydd och stöd för viltet."},
+    {t:"p",html:"Den som äger en fastighet som ingår i viltvårdsområdet är medlem i föreningen och kallas fastighetsägare."},
+    {t:"p",html:"Den som genom godkänd upplåtelse har rätt att under minst ett år jaga på en fastighet inom området ska på begäran antas som medlem under upplåtelsetiden, om inte särskilda skäl föranleder annat."}]},
+  {doc:"stadgar",tag:"§ 2",title:"Rösträtt och beslut",blocks:[
+    {t:"sub",html:"A. Jaktstämma"},
+    {t:"p",html:"Föreningsstämman – i fortsättningen kallad jaktstämman – är föreningens högsta beslutande instans. Medlemmarnas rätt att delta i beslut utövas på jaktstämma."},
+    {t:"p",html:"Endast medlemmar som är fastighetsägare har rösträtt i frågor som rör:"},
+    {t:"ul",items:[
+      "områdesjakt och gemensamhetsjakt – samt beslut om avskjutningens omfattning och inriktning,",
+      "jakträttsbevis för områdesjakt och gemensamhetsjakt,",
+      "tillstånd för upplåtelse och överlåtelse av jakträtt,",
+      "fridlysning av fastighet vars ägare av ideella skäl motsätter sig jakt,",
+      "avgifter för jakten inom viltvårdsområdet och för vilt som fälls."]},
+    {t:"p",html:"I övriga frågor har alla medlemmar rösträtt. Rösträtt utövas personligen, genom ombud eller genom behörig företrädare."},
+    {t:"p",html:"Varje medlem har en röst. På begäran av fastighetsägare ska röstetalet i frågor där endast fastighetsägare har rösträtt i stället beräknas efter fastigheternas areal: en röst för varje påbörjat "+F("100")+"-tal hektar. Ingen får rösta för mer än en femtedel av det på stämman företrädda röstetalet – begränsningen omfattar även röstning med fullmakt."},
+    {t:"p",html:"Som jaktstämmans beslut gäller den mening som fått det högsta röstetalet. Vid lika röstetal avgörs val genom lottning; i andra frågor gäller den mening som "+F("stöds av de flesta röstande, eller – om antalet röstande är lika –")+" biträds av stämmans ordförande. Är ordföranden ej röstberättigad avgörs frågan genom lottning."},
+    {t:"note",html:"I originalet är meningen om utslagsröst handskrivet ändrad. Återges enligt tillägget ovan; verifiera mot originalet."},
+    {t:"p",html:"Medlem har yttrande- och förslagsrätt även i frågor där han inte har rösträtt."},
+    {t:"sub",html:"B. Styrelse"},
+    {t:"p",html:"För föreningen finns en styrelse. Fastighetsägarna utser på jaktstämma ordförande och övriga ledamöter. Ledamöter och suppleanter ska vara medlemmar i föreningen. Minst halva antalet ledamöter ska vara fastighetsägare eller ställföreträdare för fastighetsägare."},
+    {t:"p",html:"Styrelsen är beslutsför när fler än hälften av ledamöterna är närvarande. Som styrelsens beslut gäller den mening som fått de flesta rösterna, eller vid lika röstetal den mening som biträds av ordföranden."}]},
+  {doc:"stadgar",tag:"§ 3",title:"Jaktutövning",blocks:[
+    {t:"sub",html:"A. Jakt efter älg"},
+    {t:"p",html:"Älgjakten bedrivs som gemensamhetsjakt – en för de jaktberättigade gemensam angelägenhet – eller som jakt inom egen sektion."},
+    {t:"p",html:"Gemensamhetsjakten ska organiseras och ledas av jaktledare som utses av jaktstämman, eller på dess uppdrag av styrelsen. För jaktledare ska finnas av jaktstämman fastställd instruktion. Deltagare är skyldig att följa jaktledarens anvisningar."},
+    {t:"p",html:"Jaktstämman beslutar om villkoren för deltagande, avskjutningens omfattning och inriktning, tid och sätt för jaktutövningen samt grunderna för fördelning av jaktbyte."},
+    {t:"p",html:"Jaktberättigade som ensamma eller tillsammans har jakträtt på ett område om minst "+F("1 000")+" hektar, lämpligt att utgöra egen sektion, kan förbehålla sig älgjakten där, om det inte är olämpligt från viltvårdssynpunkt. Jaktstämman beslutar om sektionsindelning. Egen sektion utser själv jaktledare och beslutar om tid, sätt och fördelning av jaktbyte; i övrigt beslutar jaktstämman."},
+    {t:"sub",html:"B. Jakt efter annat vilt än älg (övrig jakt)"},
+    {t:"p",html:"Jakten bedrivs av envar jaktberättigad inom hela viltvårdsområdet – områdesjakt. (Alternativet med jakt enbart på eget område är överstruket i originalet.)"},
+    {t:"p",html:"Jaktberättigade som ensamma eller tillsammans har jakträtt på ett område om minst "+F("1 000")+" hektar kan förbehålla sig jakt där, om det inte är olämpligt från viltvårdssynpunkt. De som har rätt till jakt inom särskild sektion har jaktutövningsrätt inom hela sektionen."},
+    {t:"p",html:"Jaktstämman beslutar om avskjutningens omfattning och inriktning."},
+    {t:"p",html:"För områdesjakt efter björn, järv, varg, lo och vildsvin får jaktstämman besluta om sådan jakt endast om det uppenbart behövs för att begränsa skador av sådant vilt. Beslutet ska fattas årligen på årsstämma."}]},
+  {doc:"stadgar",tag:"§ 4",title:"Jakträttsbevis och jaktgästbevis",blocks:[
+    {t:"p",html:"För jakt inom viltvårdsområdet som bedrivs som områdesjakt och/eller gemensamhetsjakt krävs jakträttsbevis eller jaktgästbevis i den utsträckning som anges i denna paragraf. Bevis utfärdas av den som stämman eller styrelsen utser."},
+    {t:"p",html:"Allt efter sin i viltvårdsområdet ingående areal är varje jakträttshavare berättigad att lösa ett för jakt efter älg gällande jakträttsbevis för varje fulla "+F("40")+" hektar och/eller ett för övrig jakt gällande jakträttsbevis för varje fulla "+F("40")+" hektar. (Alternativ II tillämpas; alternativ I är överstruket.)"},
+    {t:"p",html:"Den som har jakträtt genom avtal ska för varje jakträttsbevis disponera jakt på minst det antal hektar som anges ovan."},
+    {t:"p",html:"Jaktberättigad kan, på de villkor jaktstämman beslutar, få särskilt jakträttsbevis avseende viss viltart eller jakt under viss tid. Jaktgästbevis får lösas på de villkor och i den omfattning jaktstämman beslutar."},
+    {t:"p",html:"Vid samäganderätt bör jakträttsbevis ställas ut på delägarna gemensamt, men gäller endast för en delägare i sänder. Ägs fastigheten av dödsbo ställs beviset ut på dödsboet och gäller för en dödsbodelägare i sänder. Ägs den av bolag, förening eller annan juridisk person ställs beviset ut på fysisk person enligt anmälan till styrelsen."},
+    {t:"p",html:"Jaktstämman kan på ansökan besluta om extra jakträttsbevis när samäganderätts-, dödsboförhållanden eller andra särskilda förhållanden motiverar det."},
+    {t:"note",html:"Originalet innehåller en handskriven särskild bestämmelse till § 4 (om särskilt jakträttsbevis och utnyttjande inom familjen). Texten är svårtolkad och bör läsas i originalhandlingen."}]},
+  {doc:"stadgar",tag:"§ 5",title:"Avvisning och avstängning från gemensamhetsjakt",blocks:[
+    {t:"p",html:"Jaktledare har rätt att med omedelbar verkan avvisa den som, från fortsatt deltagande i gemensamhetsjakt:"},
+    {t:"ol",items:[
+      "bryter mot av jaktstämman fastställda regler för jaktutövningen,",
+      "inte följer jaktledares anvisningar,",
+      "handskas vårdslöst med skjutvapen,",
+      "är onykter."]},
+    {t:"p",html:"Jaktledaren ska snarast anmäla en avvisning till styrelsen. Styrelsen kan avstänga en medlem eller jakträttshavare som bryter mot jaktstämmans beslut om avskjutningens omfattning och inriktning, jagar på fridlyst mark eller jagar utan jakträttsbevis. Avstängning får ske för längst ett år. Före beslut ska den berörde få tillfälle att yttra sig."}]},
+  {doc:"stadgar",tag:"§ 6",title:"Avgifter",blocks:[
+    {t:"p",html:"Jaktstämman fastställer avgifter för jakträttsbevis och jaktgästbevis. Avgiften får inte bestämmas till olika belopp för jakträttsbevis av samma slag. För särskilda jakträttsbevis får avgifterna dock sättas olika efter den jaktutövningsrätt beviset medger."},
+    {t:"p",html:"Avgifternas storlek ska anpassas till och användas för föreningens verksamhet. Jaktstämman kan även besluta om särskilda avgifter för fällt villebråd, vilka enligt stämmans beslut delas ut till fastighetsägarna i proportion till deras arealinnehav inom viltvårdsområdet."}]},
+  {doc:"stadgar",tag:"§ 7",title:"Upplåtelse och överlåtelse",blocks:[
+    {t:"p",html:"Jakträtt och jaktutövningsrätt kan upplåtas eller överlåtas genom (A) avtal om upplåtelse, (B) överlåtelse av jakträttsbevis, eller (C) inbjudan av jaktgäst."},
+    {t:"sub",html:"A. Avtal om upplåtelse av jakträtt m.m."},
+    {t:"p",html:"Avtal om upplåtelse ska upprättas skriftligen och godkännas av jaktstämman för att berättiga till jakt inom området. Godkännande får vägras endast om mottagaren inte förfogar över mark av sådan storlek som anges i § 4, eller om upplåtelsen annars är olämplig med hänsyn till viltvården eller till avsevärd olägenhet för medlemmarna."},
+    {t:"sub",html:"B. Överlåtelse av jakträttsbevis"},
+    {t:"p",html:"Överlåtelse får ske till annan fastighetsägare som löst eget bevis, samt till fastighetsägarens make, föräldrar, syskon, barn, barnbarn och deras makar (samboende), eller till någon som tillhör överlåtarens hushåll eller har fast anställning hos fastighetsägaren. Överlåtelsen ska anmälas till styrelsen."},
+    {t:"p",html:"Fastighetsägare får överlåta jakträttsbevis till föreningen, som kan vidareöverlåta det. Vid överlåtelse ska mottagarens namn och tiden antecknas på beviset; överlåtelsen är inte giltig utan sådan anteckning, undertecknad av fastighetsägaren."},
+    {t:"sub",html:"C. Inbjudan av jaktgäst"},
+    {t:"p",html:"Jaktgäster får bjudas in enligt av jaktstämman beslutade regler. Rätten att lösa jaktgästbevis får överlåtas till föreningen, som kan vidareöverlåta det."}]},
+  {doc:"stadgar",tag:"§ 8",title:"Särskild fridlysning",blocks:[
+    {t:"p",html:"På begäran av fastighetsägare som av ideella skäl motsätter sig jakt ska hans fastighet undantas från områdesjakt och gemensamhetsjakt, så länge jakt inte utövas av ägaren själv eller av någon han upplåtit sin rätt till. Ansökan görs hos styrelsen och prövas vid jaktstämma."}]},
+  {doc:"stadgar",tag:"§ 9",title:"Åtgärder för viltvård",blocks:[
+    {t:"p",html:"Fastighetsägare är skyldig att tåla att åtgärder som behövs för viltvården vidtas på hans fastighet, om det inte inskränker hans rätt att jaga eller på annat sätt nyttja en fastighet inom viltvårdsområdet."}]},
+  {doc:"stadgar",tag:"§ 10",title:"Viltstatistik",blocks:[
+    {t:"p",html:"Den som jagat inom området, eller löst eller övertagit jakträttsbevis eller jaktgästbevis, är skyldig att årligen – före den dag styrelsen bestämmer – själv eller genom sin jaktvärd lämna skriftlig uppgift till styrelsen om antalet vilt av varje slag som fällts eller fångats inom området under den tid beviset omfattat."}]},
+  {doc:"stadgar",tag:"§ 11",title:"Ordinarie jaktstämma",blocks:[
+    {t:"p",html:"Ordinarie jaktstämma hålls årligen på tid och plats som styrelsen bestämmer, dock senast den "+F("31 augusti")+". Vid stämman behandlas följande ärenden:"},
+    {t:"ol",items:[
+      "Val av ordförande för stämman",
+      "Anmälan om protokollförare",
+      "Val av två justeringsmän",
+      "Fråga om stämman utlysts i behörig ordning",
+      "Fastställande av röstlängd",
+      "Styrelsens och revisorernas berättelser samt fråga om ansvarsfrihet för styrelsen",
+      "Fråga om användning av eventuellt överskott från föregående räkenskapsår",
+      "Styrelsens förslag till utgifts- och inkomststat",
+      "Fastställande av regler för jaktutövning och viltvård samt instruktioner för jaktledare",
+      "Fastställande av avgifter för jakträttsbevis, jaktgästbevis samt i förekommande fall för fällt villebråd",
+      "Framställningar från styrelsen och motioner från medlemmarna",
+      "Frågor om föreningens tillstånd för upplåtelse och överlåtelse av jakträtt inom området",
+      "Antagande av medlemmar",
+      "Val av ordförande i styrelsen",
+      "Val av övriga styrelseledamöter jämte suppleanter",
+      "Val av revisorer jämte suppleanter",
+      "Val av de personer som ska utfärda jakträtts- och jaktgästbevis",
+      "Bestämmande av sättet för delgivning av jaktstämmans och styrelsens beslut samt för kallelse till jaktstämma",
+      "Val av valberedning",
+      "(Särskild punkt enligt stämmans beslut)",
+      "Övriga frågor"]}]},
+  {doc:"stadgar",tag:"§ 12",title:"Extra jaktstämma",blocks:[
+    {t:"p",html:"Extra jaktstämma ska hållas då styrelsen finner anledning till det, eller då det begärs av mer än en femtedel av fastighetsägarna, eller av fastighetsägare som äger mer än en femtedel av viltvårdsområdets areal. Vid extra stämma får beslut fattas endast i ärenden som angetts i kallelsen."}]},
+  {doc:"stadgar",tag:"§ 13",title:"Kallelse till jaktstämma",blocks:[
+    {t:"p",html:"Kallelse till jaktstämma ska ske senast "+F("14")+" dagar före stämman."}]},
+  {doc:"stadgar",tag:"§ 14",title:"Motioner",blocks:[
+    {t:"p",html:"Medlem kan genom motion väcka förslag rörande föreningens verksamhet. Motion ska vara styrelsen tillhanda senast under "+F("[månad – ifylld för hand]")+"."}]},
+  {doc:"stadgar",tag:"§ 15",title:"Styrelsen",blocks:[
+    {t:"p",html:"Styrelsen ska ha sitt säte i "+F("Gustavsfors")+" och bestå av ordförande samt "+F("[antal]")+" ledamöter och "+F("[antal]")+" suppleanter. Ledamöter och suppleanter utses för ett år i sänder, om inte jaktstämman beslutar annat."}]},
+  {doc:"stadgar",tag:"§ 16",title:"Styrelsens åligganden",blocks:[
+    {t:"p",html:"Styrelsen företräder föreningen, ansvarar för dess tillgångar, förvaltar dess angelägenheter och verkställer jaktstämmans beslut. Det åligger styrelsen:"},
+    {t:"ol",items:[
+      "att föra noggranna räkenskaper,",
+      "att hålla fastighets- och medlemsförteckning aktuell och före varje jaktstämma upprätta röstlängd,",
+      "att till jaktstämman lämna förslag till viltvårdsåtgärder och regler för jaktutövningen under jaktåret (bl.a. avskjutningens omfattning och inriktning, avgifter för jakträtts- och jaktgästbevis, eventuella avgifter för visst vilt, underlättande av annan jakt under älgjakt samt former för gemensamhetsjakt och krav på skjutprov),",
+      "att genom den stämman utser utfärda och lämna ut jakträtts- och jaktgästbevis,",
+      "att i förekommande fall se till att licensansökningar m.m. ges in till myndighet,",
+      "att ansvara för beslutade viltvårdsinsatser, genomföra jaktbevakning och hålla viltvårdsområdets gränser markerade,",
+      "att medverka till frivilliga byten av jakträtt och arrendering i samordnande syfte, samt avge förslag om överlåtelse av jakträtts- och jaktgästbevis till föreningen och villkoren vid vidareöverlåtelse."]},
+    {t:"note",html:"Ändring av äganderätt till, eller omfattning av, en fastighet i området ska anmälas av ägaren till styrelsen, som för in ändringen i fastighetsförteckningen. Detsamma gäller ändrad fastighetsbeteckning."}]},
+  {doc:"stadgar",tag:"§ 17",title:"Räkenskapsperiod och revision",blocks:[
+    {t:"p",html:"Föreningens räkenskapsperiod omfattar tiden "+F("1 juli – 30 juni")+". För granskning av styrelsens förvaltning och föreningens räkenskaper utses årligen på jaktstämma en eller två revisorer och en eller två suppleanter. Räkenskaperna ska lämnas till revisorn senast 14 dagar efter räkenskapsårets utgång, och revisionen ska vara avslutad före närmast följande ordinarie jaktstämma."}]},
+  {doc:"stadgar",tag:"§ 18",title:"Överklagande av beslut",blocks:[
+    {t:"p",html:"Beslut av jaktstämma eller styrelse kan, i den ordning och omfattning som följer av lagen om viltvårdsområden, överklagas hos länsstyrelsen av den vars rätt berörs av beslutet, om beslutet gått denne emot."}]},
+  {doc:"stadgar",tag:"§ 19",title:"Ändring av stadgar",blocks:[
+    {t:"p",html:"Beslut om ändring av stadgarna fattas på jaktstämma. Beslutet är giltigt endast om det fattats på två på varandra följande stämmor och inte bestrids av mer än en femtedel av fastighetsägarna eller av fastighetsägare som äger mer än en femtedel av arealen. Avser beslutet §§ 1–9 eller 18–20 ska det dessutom fastställas av länsstyrelsen. Ändringsförslaget måste ha funnits med i kallelsen."}]},
+  {doc:"stadgar",tag:"§ 20",title:"Upplösning av föreningen",blocks:[
+    {t:"p",html:"Upplösning av föreningen kan ske på det sätt som anges i lag (2000:592) om viltvårdsområden."}]}
+];
+
+/* ===== Logik ===== */
+const strip = s => (""+s).replace(/<[^>]*>/g," ");
+DATA.forEach((it,i)=>{
+  it.id = it.doc.slice(0,2)+"-"+i;
+  let txt = it.tag+" "+it.title+" ";
+  it.blocks.forEach(b=>{
+    if(b.html) txt += strip(b.html)+" ";
+    if(b.items) txt += b.items.map(strip).join(" ")+" ";
+  });
+  it._text = txt.toLowerCase();
+});
+
+const DOCNAME = {jaktregler:"Jaktregler", stadgar:"Stadgar"};
+let state = {tab:"jaktregler", q:"", open:new Set()};
+
+const list = document.getElementById("list");
+const chips = document.getElementById("chips");
+const rescount = document.getElementById("rescount");
+const qInput = document.getElementById("q");
+const clearBtn = document.getElementById("clear");
+
+function renderBlock(b){
+  if(b.t==="p")   return `<p>${b.html}</p>`;
+  if(b.t==="sub") return `<h4 class="sub">${b.html}</h4>`;
+  if(b.t==="note")return `<p class="note">${b.html}</p>`;
+  if(b.t==="ul")  return `<ul>${b.items.map(x=>`<li>${x}</li>`).join("")}</ul>`;
+  if(b.t==="ol")  return `<ol>${b.items.map(x=>`<li>${x}</li>`).join("")}</ol>`;
+  return "";
+}
+
+function cardHTML(it, opened, showSrc){
+  return `<article class="card${opened?" open":""}" data-id="${it.id}">
+    <button class="card-head" type="button" aria-expanded="${opened}">
+      <span class="tag tag-${it.doc}">${it.tag}</span>
+      <span class="card-title">${showSrc?`<span class="src">${DOCNAME[it.doc]}</span>`:""}${it.title}</span>
+      <span class="chev" aria-hidden="true"></span>
+    </button>
+    <div class="card-body">${it.blocks.map(renderBlock).join("")}</div>
+  </article>`;
+}
+
+function highlight(root, q){
+  if(!q) return;
+  const rx = new RegExp("("+q.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+")","gi");
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+    acceptNode(n){ return n.nodeValue.trim() ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT; }
+  });
+  const nodes=[]; let n; while((n=walker.nextNode())) nodes.push(n);
+  nodes.forEach(node=>{
+    rx.lastIndex=0;
+    if(!rx.test(node.nodeValue)) return;
+    rx.lastIndex=0;
+    const s=node.nodeValue, frag=document.createDocumentFragment();
+    let last=0,m;
+    while((m=rx.exec(s))){
+      if(m.index>last) frag.appendChild(document.createTextNode(s.slice(last,m.index)));
+      const mk=document.createElement("mark"); mk.textContent=m[0]; frag.appendChild(mk);
+      last=m.index+m[0].length;
+      if(m[0].length===0) rx.lastIndex++;
+    }
+    if(last<s.length) frag.appendChild(document.createTextNode(s.slice(last)));
+    node.parentNode.replaceChild(frag,node);
+  });
+}
+
+function render(){
+  const q = state.q.trim().toLowerCase();
+  clearBtn.classList.toggle("show", state.q.length>0);
+
+  let items;
+  if(q){
+    items = DATA.filter(it => it._text.includes(q));
+    chips.hidden = true;
+    rescount.hidden = false;
+    rescount.innerHTML = items.length
+      ? `<b>${items.length}</b> träff${items.length===1?"":"ar"} i regler och stadgar`
+      : "";
+  } else {
+    items = DATA.filter(it => it.doc===state.tab);
+    rescount.hidden = true;
+    // snabbnav för stadgar (endast §)
+    const secs = DATA.filter(it=>it.doc==="stadgar" && it.tag[0]==="§");
+    if(state.tab==="stadgar"){
+      chips.hidden = false;
+      chips.innerHTML = secs.map(it=>`<button class="chip" data-go="${it.id}">${it.tag}</button>`).join("");
+    } else {
+      chips.hidden = true;
+    }
+  }
+
+  if(items.length===0){
+    list.innerHTML = `<div class="empty"><div class="big">🔍</div>Inga träffar för ”${state.q.trim()}”.<br>Pröva ett annat ord, t.ex. <b>jaktledare</b>, <b>areal</b> eller <b>fridlysning</b>.</div>`;
+    return;
+  }
+
+  list.innerHTML = items.map(it => cardHTML(it, q? true : state.open.has(it.id), !!q)).join("");
+  if(q) highlight(list, q);
+}
+
+/* events */
+qInput.addEventListener("input", e=>{ state.q=e.target.value; render(); });
+clearBtn.addEventListener("click", ()=>{ state.q=""; qInput.value=""; qInput.focus(); render(); });
+
+document.getElementById("tabs").addEventListener("click", e=>{
+  const t=e.target.closest(".tab"); if(!t) return;
+  state.tab=t.dataset.doc;
+  [...document.querySelectorAll(".tab")].forEach(x=>x.setAttribute("aria-selected", x===t));
+  state.open.clear();
+  render();
+  window.scrollTo({top:0});
+});
+
+list.addEventListener("click", e=>{
+  const head=e.target.closest(".card-head"); if(!head) return;
+  const card=head.closest(".card"), id=card.dataset.id;
+  const opening=!card.classList.contains("open");
+  card.classList.toggle("open", opening);
+  head.setAttribute("aria-expanded", opening);
+  if(!state.q.trim()){ opening ? state.open.add(id) : state.open.delete(id); }
+});
+
+chips.addEventListener("click", e=>{
+  const c=e.target.closest(".chip"); if(!c) return;
+  const id=c.dataset.go;
+  state.open.add(id); render();
+  const el=list.querySelector(`[data-id="${id}"]`);
+  if(el){ el.scrollIntoView({behavior:"smooth",block:"start"}); }
+});
+
+const tb=document.getElementById("toolbar");
+window.addEventListener("scroll", ()=>{ tb.classList.toggle("scrolled", window.scrollY>8); }, {passive:true});
+
+render();
+</script>
+</body>
+</html>
