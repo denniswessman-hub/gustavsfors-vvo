@@ -86,6 +86,16 @@
   }
   .tab[aria-selected="true"]{background:var(--card);color:var(--spruce);box-shadow:var(--shadow)}
   .tab .n{font-weight:500;opacity:.7;font-size:12.5px}
+  @media (max-width:360px){ .tab{font-size:13px;padding:9px 3px} }
+
+  .tag-protokoll{background:#DCE7F2;color:#1F4A73}
+  .beslut{
+    background:#EEF6EF;border:1px solid #C4DCC9;border-left:4px solid var(--moss);
+    border-radius:0 10px 10px 0;padding:11px 14px;margin:0 0 11px;
+    font-size:14.5px;line-height:1.55;color:#22332A;
+  }
+  .beslut::before{content:"BESLUT";display:block;font-size:9.5px;font-weight:800;
+    letter-spacing:.14em;color:var(--moss);margin-bottom:4px}
 
   /* ---------- Chips (snabbnavigering §) ---------- */
   #chips{display:flex;gap:7px;overflow-x:auto;padding:12px 14px 4px;-webkit-overflow-scrolling:touch}
@@ -169,7 +179,7 @@
       </div>
     </div>
     <div class="blaze-rule"></div>
-    <p class="sub"><b>Jaktregler &amp; stadgar</b> · Bengtsfors kommun, Västra Götalands län. Sök fram en regel direkt – ute i fält eller inför stämman.</p>
+    <p class="sub"><b>Jaktregler · Stadgar · Årsmötesbeslut 2026</b><br>Bengtsfors kommun, Västra Götalands län. Sök fram en regel eller ett beslut direkt – ute i fält eller inför stämman.</p>
   </header>
 
   <div class="toolbar" id="toolbar">
@@ -178,12 +188,13 @@
         <circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.5" y2="16.5"></line>
       </svg>
       <input id="q" type="search" inputmode="search" autocomplete="off"
-        placeholder="Sök – t.ex. älg, jaktgäst, avgift, trofé" aria-label="Sök i regler och stadgar">
+        placeholder="Sök – t.ex. älgjakt, jaktledare, avgift, samjakt" aria-label="Sök i regler, stadgar och protokoll">
       <button class="clear" id="clear" aria-label="Rensa sökning">×</button>
     </div>
     <div class="tabs" role="tablist" id="tabs">
-      <button class="tab" role="tab" data-doc="jaktregler" aria-selected="true">Jaktregler <span class="n">14</span></button>
-      <button class="tab" role="tab" data-doc="stadgar" aria-selected="false">Stadgar <span class="n">§§ 1–20</span></button>
+      <button class="tab" role="tab" data-doc="jaktregler" aria-selected="true">Jaktregler</button>
+      <button class="tab" role="tab" data-doc="stadgar" aria-selected="false">Stadgar</button>
+      <button class="tab" role="tab" data-doc="protokoll" aria-selected="false">Årsmöte <span class="n">-26</span></button>
     </div>
   </div>
 
@@ -233,11 +244,23 @@
 <article class="card open" data-id="st-34"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-stadgar">§ 18</span><span class="card-title"><span class="src">Stadgar</span>Överklagande av beslut</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><p>Beslut av jaktstämma eller styrelse kan, i den ordning och omfattning som följer av lagen om viltvårdsområden, överklagas hos länsstyrelsen av den vars rätt berörs av beslutet, om beslutet gått denne emot.</p></div></article>
 <article class="card open" data-id="st-35"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-stadgar">§ 19</span><span class="card-title"><span class="src">Stadgar</span>Ändring av stadgar</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><p>Beslut om ändring av stadgarna fattas på jaktstämma. Beslutet är giltigt endast om det fattats på två på varandra följande stämmor och inte bestrids av mer än en femtedel av fastighetsägarna eller av fastighetsägare som äger mer än en femtedel av arealen. Avser beslutet §§ 1–9 eller 18–20 ska det dessutom fastställas av länsstyrelsen. Ändringsförslaget måste ha funnits med i kallelsen.</p></div></article>
 <article class="card open" data-id="st-36"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-stadgar">§ 20</span><span class="card-title"><span class="src">Stadgar</span>Upplösning av föreningen</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><p>Upplösning av föreningen kan ske på det sätt som anges i lag (2000:592) om viltvårdsområden.</p></div></article>
+<article class="card open" data-id="pr-37"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-protokoll">Översikt</span><span class="card-title"><span class="src">Årsmöte 2026</span>Detta beslutades på årsmötet</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><p>Årsmöte för Gustavsfors VVO hölls <b>torsdagen den 9 juli 2026 kl. 17.00</b> i Gustavsfors Folkets Hus. Nedan de beslut som påverkar jaktåret 2026/2027.</p><div class="beslut"><b>Älgjakt 2026:</b> 23, 24 och 25 oktober. Styrelsen meddelar detaljer.</div><div class="beslut"><b>Samjakt småvilt 2026:</b> 17 oktober. Rådjurssamling vid slingan, Kopparudsvägen, kl. 07.00.</div><div class="beslut"><b>Avgifter oförändrade:</b> 250 kr för jakträttsbevis och 250 kr för gästjaktsbevis.</div><div class="beslut"><b>Digitala jakträttsbevis</b> infördes från och med 1 juli 2026.</div><div class="beslut"><b>Jaktledare älgjakt och samjakter:</b> ordinarie Erik Bönfors. Vice jaktledare delas mellan Conny Wessman och Dennis Wessman.</div><div class="beslut"><b>Jaktregler:</b> desamma som tidigare – inga ändringar.</div><div class="beslut"><b>Vildsvinsjakt 2026/2027:</b> ingår i småviltjakten. Klass 1-vapen.</div><div class="beslut"><b>Älgjaktgäst 2026:</b> Julia Sjöqvist.</div></div></article>
+<article class="card open" data-id="pr-38"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-protokoll">Jaktkort</span><span class="card-title"><span class="src">Årsmöte 2026</span>Jaktkort 2026/2027 – så löser du det</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><p>Gäller 1 juli 2026 – 30 juni 2027. Avgiften är oförändrad: <b>250 kr</b> för jaktkort och <b>500 kr</b> för jaktkort med gäst.</p><p class="note">Gäst avser person som är med vid jakt enstaka gånger under jaktåret – inte vid varje jakttillfälle.</p><p>Swishavgiften är avskaffad på prov, tack vare god ekonomi i föreningen.</p><p>Swisha avgiften till <b>123 582 55 34</b> och ange i meddelandet: <i>jaktkort</i> alternativt <i>jaktkort med gäst</i>, samt ditt namn. Kassören utfärdar därefter ett jakträttsbevis som PDF, som skickas via WhatsApp eller SMS/MMS.</p><p>Som vanligt gäller att jaktkortet ska medföras och kunna visas upp vid anmodan. Vildsvin ingår även i år i jaktkortets vilt.</p><p class="note">Kontaktperson: Sören Axelsson, kassör.</p></div></article>
+<article class="card open" data-id="pr-39"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-protokoll">§ 1–6</span><span class="card-title"><span class="src">Årsmöte 2026</span>Mötets öppnande och formalia</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><ol><li>Mötet öppnades av Conny Wessman.</li><li>Mötet godkände dagordningen.</li><li>Dennis Wessman utsågs att leda årsmötet.</li><li>Att jämte ordföranden justera dagens protokoll valdes Leif Danielsson och Göran Denisson.</li><li>Sten Bönfors utsågs att föra dagens protokoll.</li><li>Mötet ansågs vara i laga ordning utlyst genom annons i Dalslänningen den 23 juni.</li></ol></div></article>
+<article class="card open" data-id="pr-40"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-protokoll">§ 7–8</span><span class="card-title"><span class="src">Årsmöte 2026</span>Berättelser och ansvarsfrihet</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><p><b>§ 7.</b> Verksamhetsberättelse, kassaberättelse och revisionsberättelse föredrogs av Sten Bönfors, Sören Axelsson och Göran Denisson, i nämnd ordning.</p><p><b>§ 8.</b> Styrelsen beviljades ansvarsfrihet för det gångna året.</p></div></article>
+<article class="card open" data-id="pr-41"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-protokoll">§ 9–13</span><span class="card-title"><span class="src">Årsmöte 2026</span>Val till styrelse och revision</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><p><b>§ 9.</b> Dennis Wessman omvaldes som ordförande för ett år. Conny Wessman omvaldes som tillförordnad ordförande för ett år.</p><p><b>§ 10.</b> Sören Axelsson omvaldes som kassör för två år.</p><p><b>§ 11.</b> Sten Bönfors omvaldes till styrelseledamot för två år. Erik Bönfors sitter kvar ett år till.</p><p><b>§ 12.</b> Styrelsesuppleanterna Östen Andersson och Fredrik Axelsson sitter kvar ett år till.</p><p><b>§ 13.</b> Revisor Peter Granlund och revisorssuppleant Göran Denisson sitter kvar ett år till.</p></div></article>
+<article class="card open" data-id="pr-42"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-protokoll">§ 14–16</span><span class="card-title"><span class="src">Årsmöte 2026</span>Jaktregler, avgifter och digitala bevis</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><p><b>§ 14.</b> Reglerna för jakt inom Gustavsfors VVO bestämdes vara desamma som tidigare.</p><p><b>§ 15.</b> Priset för jakträttsbevis och gästjaktsbevis behölls som tidigare: 250 + 250 kronor.</p><p><b>§ 16.</b> Mötet beslutade att införa digitala jakträttsbevis från och med 2026-07-01.</p></div></article>
+<article class="card open" data-id="pr-43"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-protokoll">§ 17</span><span class="card-title"><span class="src">Årsmöte 2026</span>Älgjakt 2026</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><div class="beslut">Årets älgjakt bestämdes till den <b>23, 24 och 25 oktober</b>. Styrelsen meddelar detaljer kring älgjakten.</div><p class="note">Kom ihåg jaktreglerna: anmälan till jaktledaren, jägarförsäkring och skjutprov (minst bronsfordring samma år). Under utlyst älgjakt får ingen annan enskild områdesjakt bedrivas.</p></div></article>
+<article class="card open" data-id="pr-44"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-protokoll">§ 18–20</span><span class="card-title"><span class="src">Årsmöte 2026</span>Viltvård, inventering och jaktgäst</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><p><b>§ 18.</b> Viltvård: inköp av saltstenar och foder till rådjur.</p><p><b>§ 19.</b> Spillningsinventering 2026/2027 kommer att ske som vanligt.</p><p><b>§ 20.</b> Älgjaktgäst 2026: Julia Sjöqvist.</p></div></article>
+<article class="card open" data-id="pr-45"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-protokoll">§ 21</span><span class="card-title"><span class="src">Årsmöte 2026</span>Samjakt småvilt 2026</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><div class="beslut">Samjakt småvilt 2026: <b>17 oktober</b>. Rådjurssamling vid slingan, Kopparudsvägen, <b>kl. 07.00</b>.</div><p>Eventuellt planeras vildsvinsjakt tillsammans med Vårviks jaktlag.</p></div></article>
+<article class="card open" data-id="pr-46"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-protokoll">§ 22–23</span><span class="card-title"><span class="src">Årsmöte 2026</span>Jaktledare och vildsvinsjakt</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><p><b>§ 22.</b> Val av jaktledare vid älgjakt och samjakter: ordinarie jaktledare Erik Bönfors. Vice jaktledare delas mellan Conny Wessman och Dennis Wessman.</p><p><b>§ 23.</b> Vildsvinsjakten 2026/2027 ska ingå i småviltjakten. Klass 1-vapen.</p></div></article>
+<article class="card open" data-id="pr-47"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-protokoll">§ 24–27</span><span class="card-title"><span class="src">Årsmöte 2026</span>Arrende, viltkameror och avslutning</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><p><b>§ 24.</b> Stefan Swarts arrenderar jakträtt för småviltjakt av Göran Denisson. Mötet godkände kontraktet.</p><p><b>§ 25.</b> Styrelsen beslutar om ytterligare viltkameror ska köpas in.</p><p><b>§ 26.</b> Protokollet finns tillgängligt hos Sten Bönfors, Lövningevägen 6, 666 93 Gustavsfors.</p><p><b>§ 27.</b> Ordföranden tackade för visat intresse och avslutade mötet.</p><p class="note">Protokollet justerat av Göran Denisson och Leif Danielsson. Protokollförare: Sten Bönfors. Mötesordförande: Dennis Wessman.</p></div></article>
 </div>
   </main>
 
   <footer>
-    Sammanställt ur föreningens jaktregler och normalstadgar (SJF, dnr 27-45408-2001).<br>
+    Sammanställt ur föreningens jaktregler, normalstadgar (SJF, dnr 27-45408-2001) och årsmötesprotokollet 2026-07-09.<br>
+    Protokollet i original finns hos Sten Bönfors, Lövningevägen 6, 666 93 Gustavsfors.<br>
     Handskrivna ifyllnader är <span class="fill">markerade</span> och bör verifieras mot originalet. Lag (2000:592) om viltvårdsområden gäller i övrigt.
   </footer>
 </div>
@@ -410,7 +433,75 @@ const DATA = [
   {doc:"stadgar",tag:"§ 19",title:"Ändring av stadgar",blocks:[
     {t:"p",html:"Beslut om ändring av stadgarna fattas på jaktstämma. Beslutet är giltigt endast om det fattats på två på varandra följande stämmor och inte bestrids av mer än en femtedel av fastighetsägarna eller av fastighetsägare som äger mer än en femtedel av arealen. Avser beslutet §§ 1–9 eller 18–20 ska det dessutom fastställas av länsstyrelsen. Ändringsförslaget måste ha funnits med i kallelsen."}]},
   {doc:"stadgar",tag:"§ 20",title:"Upplösning av föreningen",blocks:[
-    {t:"p",html:"Upplösning av föreningen kan ske på det sätt som anges i lag (2000:592) om viltvårdsområden."}]}
+    {t:"p",html:"Upplösning av föreningen kan ske på det sätt som anges i lag (2000:592) om viltvårdsområden."}]},
+  /* -------- ÅRSMÖTESPROTOKOLL 2026 -------- */
+  {doc:"protokoll",tag:"Översikt",title:"Detta beslutades på årsmötet",blocks:[
+    {t:"p",html:"Årsmöte för Gustavsfors VVO hölls <b>torsdagen den 9 juli 2026 kl. 17.00</b> i Gustavsfors Folkets Hus. Nedan de beslut som påverkar jaktåret 2026/2027."},
+    {t:"beslut",html:"<b>Älgjakt 2026:</b> 23, 24 och 25 oktober. Styrelsen meddelar detaljer."},
+    {t:"beslut",html:"<b>Samjakt småvilt 2026:</b> 17 oktober. Rådjurssamling vid slingan, Kopparudsvägen, kl. 07.00."},
+    {t:"beslut",html:"<b>Avgifter oförändrade:</b> 250 kr för jakträttsbevis och 250 kr för gästjaktsbevis."},
+    {t:"beslut",html:"<b>Digitala jakträttsbevis</b> infördes från och med 1 juli 2026."},
+    {t:"beslut",html:"<b>Jaktledare älgjakt och samjakter:</b> ordinarie Erik Bönfors. Vice jaktledare delas mellan Conny Wessman och Dennis Wessman."},
+    {t:"beslut",html:"<b>Jaktregler:</b> desamma som tidigare – inga ändringar."},
+    {t:"beslut",html:"<b>Vildsvinsjakt 2026/2027:</b> ingår i småviltjakten. Klass 1-vapen."},
+    {t:"beslut",html:"<b>Älgjaktgäst 2026:</b> Julia Sjöqvist."}]},
+
+  {doc:"protokoll",tag:"Jaktkort",title:"Jaktkort 2026/2027 – så löser du det",blocks:[
+    {t:"p",html:"Gäller 1 juli 2026 – 30 juni 2027. Avgiften är oförändrad: <b>250 kr</b> för jaktkort och <b>500 kr</b> för jaktkort med gäst."},
+    {t:"note",html:"Gäst avser person som är med vid jakt enstaka gånger under jaktåret – inte vid varje jakttillfälle."},
+    {t:"p",html:"Swishavgiften är avskaffad på prov, tack vare god ekonomi i föreningen."},
+    {t:"p",html:"Swisha avgiften till <b>123 582 55 34</b> och ange i meddelandet: <i>jaktkort</i> alternativt <i>jaktkort med gäst</i>, samt ditt namn. Kassören utfärdar därefter ett jakträttsbevis som PDF, som skickas via WhatsApp eller SMS/MMS."},
+    {t:"p",html:"Som vanligt gäller att jaktkortet ska medföras och kunna visas upp vid anmodan. Vildsvin ingår även i år i jaktkortets vilt."},
+    {t:"note",html:"Kontaktperson: Sören Axelsson, kassör."}]},
+
+  {doc:"protokoll",tag:"§ 1–6",title:"Mötets öppnande och formalia",blocks:[
+    {t:"ol",items:[
+      "Mötet öppnades av Conny Wessman.",
+      "Mötet godkände dagordningen.",
+      "Dennis Wessman utsågs att leda årsmötet.",
+      "Att jämte ordföranden justera dagens protokoll valdes Leif Danielsson och Göran Denisson.",
+      "Sten Bönfors utsågs att föra dagens protokoll.",
+      "Mötet ansågs vara i laga ordning utlyst genom annons i Dalslänningen den 23 juni."]}]},
+
+  {doc:"protokoll",tag:"§ 7–8",title:"Berättelser och ansvarsfrihet",blocks:[
+    {t:"p",html:"<b>§ 7.</b> Verksamhetsberättelse, kassaberättelse och revisionsberättelse föredrogs av Sten Bönfors, Sören Axelsson och Göran Denisson, i nämnd ordning."},
+    {t:"p",html:"<b>§ 8.</b> Styrelsen beviljades ansvarsfrihet för det gångna året."}]},
+
+  {doc:"protokoll",tag:"§ 9–13",title:"Val till styrelse och revision",blocks:[
+    {t:"p",html:"<b>§ 9.</b> Dennis Wessman omvaldes som ordförande för ett år. Conny Wessman omvaldes som tillförordnad ordförande för ett år."},
+    {t:"p",html:"<b>§ 10.</b> Sören Axelsson omvaldes som kassör för två år."},
+    {t:"p",html:"<b>§ 11.</b> Sten Bönfors omvaldes till styrelseledamot för två år. Erik Bönfors sitter kvar ett år till."},
+    {t:"p",html:"<b>§ 12.</b> Styrelsesuppleanterna Östen Andersson och Fredrik Axelsson sitter kvar ett år till."},
+    {t:"p",html:"<b>§ 13.</b> Revisor Peter Granlund och revisorssuppleant Göran Denisson sitter kvar ett år till."}]},
+
+  {doc:"protokoll",tag:"§ 14–16",title:"Jaktregler, avgifter och digitala bevis",blocks:[
+    {t:"p",html:"<b>§ 14.</b> Reglerna för jakt inom Gustavsfors VVO bestämdes vara desamma som tidigare."},
+    {t:"p",html:"<b>§ 15.</b> Priset för jakträttsbevis och gästjaktsbevis behölls som tidigare: 250 + 250 kronor."},
+    {t:"p",html:"<b>§ 16.</b> Mötet beslutade att införa digitala jakträttsbevis från och med 2026-07-01."}]},
+
+  {doc:"protokoll",tag:"§ 17",title:"Älgjakt 2026",blocks:[
+    {t:"beslut",html:"Årets älgjakt bestämdes till den <b>23, 24 och 25 oktober</b>. Styrelsen meddelar detaljer kring älgjakten."},
+    {t:"note",html:"Kom ihåg jaktreglerna: anmälan till jaktledaren, jägarförsäkring och skjutprov (minst bronsfordring samma år). Under utlyst älgjakt får ingen annan enskild områdesjakt bedrivas."}]},
+
+  {doc:"protokoll",tag:"§ 18–20",title:"Viltvård, inventering och jaktgäst",blocks:[
+    {t:"p",html:"<b>§ 18.</b> Viltvård: inköp av saltstenar och foder till rådjur."},
+    {t:"p",html:"<b>§ 19.</b> Spillningsinventering 2026/2027 kommer att ske som vanligt."},
+    {t:"p",html:"<b>§ 20.</b> Älgjaktgäst 2026: Julia Sjöqvist."}]},
+
+  {doc:"protokoll",tag:"§ 21",title:"Samjakt småvilt 2026",blocks:[
+    {t:"beslut",html:"Samjakt småvilt 2026: <b>17 oktober</b>. Rådjurssamling vid slingan, Kopparudsvägen, <b>kl. 07.00</b>."},
+    {t:"p",html:"Eventuellt planeras vildsvinsjakt tillsammans med Vårviks jaktlag."}]},
+
+  {doc:"protokoll",tag:"§ 22–23",title:"Jaktledare och vildsvinsjakt",blocks:[
+    {t:"p",html:"<b>§ 22.</b> Val av jaktledare vid älgjakt och samjakter: ordinarie jaktledare Erik Bönfors. Vice jaktledare delas mellan Conny Wessman och Dennis Wessman."},
+    {t:"p",html:"<b>§ 23.</b> Vildsvinsjakten 2026/2027 ska ingå i småviltjakten. Klass 1-vapen."}]},
+
+  {doc:"protokoll",tag:"§ 24–27",title:"Arrende, viltkameror och avslutning",blocks:[
+    {t:"p",html:"<b>§ 24.</b> Stefan Swarts arrenderar jakträtt för småviltjakt av Göran Denisson. Mötet godkände kontraktet."},
+    {t:"p",html:"<b>§ 25.</b> Styrelsen beslutar om ytterligare viltkameror ska köpas in."},
+    {t:"p",html:"<b>§ 26.</b> Protokollet finns tillgängligt hos Sten Bönfors, Lövningevägen 6, 666 93 Gustavsfors."},
+    {t:"p",html:"<b>§ 27.</b> Ordföranden tackade för visat intresse och avslutade mötet."},
+    {t:"note",html:"Protokollet justerat av Göran Denisson och Leif Danielsson. Protokollförare: Sten Bönfors. Mötesordförande: Dennis Wessman."}]}
 ];
 
 /* ===== Logik ===== */
@@ -425,7 +516,7 @@ DATA.forEach((it,i)=>{
   it._text = txt.toLowerCase();
 });
 
-const DOCNAME = {jaktregler:"Jaktregler", stadgar:"Stadgar"};
+const DOCNAME = {jaktregler:"Jaktregler", stadgar:"Stadgar", protokoll:"Årsmöte 2026"};
 let state = {tab:"jaktregler", q:"", open:new Set()};
 
 const list = document.getElementById("list");
@@ -438,6 +529,7 @@ function renderBlock(b){
   if(b.t==="p")   return `<p>${b.html}</p>`;
   if(b.t==="sub") return `<h4 class="sub">${b.html}</h4>`;
   if(b.t==="note")return `<p class="note">${b.html}</p>`;
+  if(b.t==="beslut")return `<div class="beslut">${b.html}</div>`;
   if(b.t==="ul")  return `<ul>${b.items.map(x=>`<li>${x}</li>`).join("")}</ul>`;
   if(b.t==="ol")  return `<ol>${b.items.map(x=>`<li>${x}</li>`).join("")}</ol>`;
   return "";
@@ -488,14 +580,14 @@ function render(){
     chips.hidden = true;
     rescount.hidden = false;
     rescount.innerHTML = items.length
-      ? `<b>${items.length}</b> träff${items.length===1?"":"ar"} i regler och stadgar`
+      ? `<b>${items.length}</b> träff${items.length===1?"":"ar"} i regler, stadgar och protokoll`
       : "";
   } else {
     items = DATA.filter(it => it.doc===state.tab);
     rescount.hidden = true;
-    // snabbnav för stadgar (endast §)
-    const secs = DATA.filter(it=>it.doc==="stadgar" && it.tag[0]==="§");
-    if(state.tab==="stadgar"){
+    // snabbnav med §-knappar (stadgar och protokoll)
+    const secs = DATA.filter(it=>it.doc===state.tab && it.tag.indexOf("§")===0);
+    if(secs.length>1){
       chips.hidden = false;
       chips.innerHTML = secs.map(it=>`<button class="chip" data-go="${it.id}">${it.tag}</button>`).join("");
     } else {
@@ -506,6 +598,11 @@ function render(){
   if(items.length===0){
     list.innerHTML = `<div class="empty"><div class="big">🔍</div>Inga träffar för ”${state.q.trim()}”.<br>Pröva ett annat ord, t.ex. <b>jaktledare</b>, <b>areal</b> eller <b>fridlysning</b>.</div>`;
     return;
+  }
+
+  // I årsmötesfliken fälls översikten ut automatiskt
+  if(!q && state.tab==="protokoll" && state.open.size===0 && items[0]){
+    state.open.add(items[0].id);
   }
 
   list.innerHTML = items.map(it => cardHTML(it, q? true : state.open.has(it.id), !!q)).join("");
