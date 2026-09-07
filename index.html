@@ -3,8 +3,20 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#16302A">
-<title>Gustavsfors VVO – Jaktregler & stadgar</title>
+<meta name="theme-color" content="#16302A" id="metaTheme">
+<meta name="color-scheme" content="light dark">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Gustavsfors VVO">
+<meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2316302A'/%3E%3Cpath d='M32 8l12 18h-6l10 15h-8l12 15H12l12-15h-8l10-15h-6z' fill='%238FBF9F'/%3E%3Crect x='29' y='52' width='6' height='6' fill='%23C9A07A'/%3E%3C/svg%3E">
+<title>Gustavsfors VVO – Jaktregler, stadgar & jakttider</title>
+<script>/* Sätt tema tidigt så sidan inte blinkar vitt i mörkt läge */
+(function(){try{var t=localStorage.getItem("gvvo-theme");if(!t)t=(matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches)?"dark":"light";document.documentElement.setAttribute("data-theme",t);}catch(e){}})();
+</script>
 <style>
   :root{
     --spruce:#16302A;      /* mörk granskog – struktur */
@@ -19,7 +31,26 @@
     --line:#D7DDD3;
     --ring:#E5570A;
     --shadow:0 1px 2px rgba(22,48,42,.06), 0 6px 18px rgba(22,48,42,.07);
+    --tabbg:#E2E8DF; --clearbg:#E7ECE5; --bodytxt:#27332E;
+    --notebg:#F4F2E7; --noteline:#D9B24A; --fillbg:#F4F2E7; --filltxt:#7A5A12;
+    --beslutbg:#EEF6EF; --beslutline:#C4DCC9; --markbg:#FBE3AE; --marktxt:#5A3A04;
+    --tag-st-bg:#E4EFE7; --tag-st-tx:#2F5D45; --tag-jr-bg:#FBE6D6; --tag-jr-tx:#B2480C;
+    --tag-pr-bg:#DCE7F2; --tag-pr-tx:#1F4A73; --tag-aso-bg:#EFE2D6; --tag-aso-tx:#7A4A1E;
+    --tag-jt-bg:#E9E4F3; --tag-jt-tx:#4B3A7A; --openbg:#E6F4EA; --opentx:#1F6B3A;
   }
+  html[data-theme="dark"]{
+    --paper:#0E1714; --card:#172420; --ink:#E7ECE7; --soft:#9DAAA1; --line:#2A3A33;
+    --moss:#7FB894; --blaze:#F26B1F; --amber:#5A3E0B;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 6px 18px rgba(0,0,0,.35);
+    --tabbg:#1E2C27; --clearbg:#2A3A33; --bodytxt:#D5DDD6;
+    --notebg:#2A2418; --noteline:#B98A1F; --fillbg:#2E2714; --filltxt:#E3B85C;
+    --beslutbg:#16291F; --beslutline:#2F5D45; --markbg:#6A4A0E; --marktxt:#FFE2A6;
+    --tag-st-bg:#1F3A2E; --tag-st-tx:#9FD3B1; --tag-jr-bg:#3B2417; --tag-jr-tx:#F5B48A;
+    --tag-pr-bg:#1B2E40; --tag-pr-tx:#9CC5F0; --tag-aso-bg:#3A2A1C; --tag-aso-tx:#E4B98F;
+    --tag-jt-bg:#2A2340; --tag-jt-tx:#C7B8F0; --openbg:#173A26; --opentx:#8FE0AC;
+  }
+  html{-webkit-text-size-adjust:100%;overscroll-behavior-y:none}
+  button{touch-action:manipulation;-webkit-user-select:none;user-select:none;font-family:inherit}
   *{box-sizing:border-box}
   html,body{margin:0;padding:0}
   body{
@@ -40,6 +71,19 @@
     padding-top:calc(22px + env(safe-area-inset-top));
   }
   .masthead .top{display:flex;align-items:center;gap:12px}
+  .masthead .grow{flex:1;min-width:0}
+  .actions{display:flex;gap:8px;flex:0 0 auto}
+  .iconbtn{
+    width:42px;height:42px;border-radius:12px;border:1px solid rgba(255,255,255,.18);
+    background:rgba(255,255,255,.08);color:#EAF0EA;display:flex;align-items:center;justify-content:center;
+    cursor:pointer;transition:background .15s,transform .15s;
+  }
+  .iconbtn:active{transform:scale(.94);background:rgba(255,255,255,.16)}
+  .iconbtn:focus-visible{outline:3px solid var(--blaze);outline-offset:2px}
+  .iconbtn svg{width:20px;height:20px}
+  .iconbtn.spin svg{animation:spin .7s linear}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .statusfill{position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top,0);background:var(--spruce);z-index:30}
   .pine{flex:0 0 auto}
   .eyebrow{
     font-size:11px;letter-spacing:.18em;text-transform:uppercase;
@@ -55,7 +99,7 @@
 
   /* ---------- Toolbar (sticky) ---------- */
   .toolbar{
-    position:sticky;top:0;z-index:20;
+    position:sticky;top:env(safe-area-inset-top,0);z-index:20;
     background:var(--paper);
     padding:12px 14px 10px;
     border-bottom:1px solid var(--line);
@@ -64,38 +108,65 @@
   .search{position:relative}
   .search svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);opacity:.55}
   #q{
+    -webkit-appearance:none;appearance:none;
     width:100%;border:1.5px solid var(--line);background:var(--card);
     border-radius:13px;padding:13px 40px 13px 42px;font-size:16px;color:var(--ink);
     box-shadow:var(--shadow);transition:border-color .15s;
   }
   #q::placeholder{color:#9AA59C}
+  #q::-webkit-search-cancel-button,#q::-webkit-search-decoration{-webkit-appearance:none;display:none}
   #q:focus{outline:none;border-color:var(--ring);box-shadow:0 0 0 3px rgba(229,87,10,.15)}
   .clear{
     position:absolute;right:8px;top:50%;transform:translateY(-50%);
-    border:none;background:#E7ECE5;color:var(--soft);width:28px;height:28px;border-radius:50%;
+    border:none;background:var(--clearbg);color:var(--soft);width:32px;height:32px;border-radius:50%;
     font-size:17px;line-height:1;cursor:pointer;display:none;
   }
   .clear.show{display:block}
   .clear:hover{background:#dde4db}
 
-  .tabs{display:flex;gap:6px;margin-top:10px;background:#E2E8DF;padding:4px;border-radius:12px}
+  .tabs{display:flex;gap:4px;margin-top:10px;background:var(--tabbg);padding:4px;border-radius:12px;
+    overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;scroll-snap-type:x proximity}
+  .tabs::-webkit-scrollbar{display:none}
   .tab{
-    flex:1;border:none;background:transparent;color:var(--soft);
-    font-size:14px;font-weight:600;padding:9px 6px;border-radius:9px;cursor:pointer;
-    transition:background .12s,color .12s;
+    flex:1 0 auto;min-height:42px;border:none;background:transparent;color:var(--soft);
+    font-size:14px;font-weight:600;padding:9px 13px;border-radius:9px;cursor:pointer;
+    transition:background .12s,color .12s;white-space:nowrap;scroll-snap-align:center;
   }
+  html[data-theme="dark"] .tab[aria-selected="true"]{color:#E7ECE7}
   .tab[aria-selected="true"]{background:var(--card);color:var(--spruce);box-shadow:var(--shadow)}
   .tab .n{font-weight:500;opacity:.7;font-size:12px}
-  .tabs .tab{font-size:13.5px;padding:9px 2px}
-  @media (max-width:370px){ .tabs .tab{font-size:12.5px} .tab .n{font-size:11px} }
 
-  .tag-protokoll{background:#DCE7F2;color:#1F4A73}
-  .tag-aso{background:#EFE2D6;color:#7A4A1E}
+  .tag-protokoll{background:var(--tag-pr-bg);color:var(--tag-pr-tx)}
+  .tag-aso{background:var(--tag-aso-bg);color:var(--tag-aso-tx)}
   .beslut{
-    background:#EEF6EF;border:1px solid #C4DCC9;border-left:4px solid var(--moss);
+    background:var(--beslutbg);border:1px solid var(--beslutline);border-left:4px solid var(--moss);
     border-radius:0 10px 10px 0;padding:11px 14px;margin:0 0 11px;
-    font-size:14.5px;line-height:1.55;color:#22332A;
+    font-size:14.5px;line-height:1.55;color:var(--bodytxt);
   }
+  .beslut b{color:var(--ink)}
+
+  /* Jakttidstabell */
+  .jt{margin:2px 0 12px;border-top:1px solid var(--line)}
+  .jt-row{display:grid;grid-template-columns:1fr auto;gap:2px 12px;padding:10px 0;border-bottom:1px solid var(--line);align-items:start}
+  .jt-a{font-weight:700;font-size:15px;color:var(--ink)}
+  .jt-k{grid-column:1;font-size:12.5px;color:var(--soft);line-height:1.4}
+  .jt-p{grid-column:2;grid-row:1 / span 2;text-align:right;font-size:14px;font-variant-numeric:tabular-nums;color:var(--bodytxt);white-space:nowrap;line-height:1.5}
+  .jt-n{grid-column:1 / -1;font-size:12.5px;color:var(--soft);font-style:italic;margin-top:2px}
+  .jt-row.open .jt-a::after{content:"Lovligt nu";display:inline-block;margin-left:8px;font-size:10px;font-weight:800;
+    letter-spacing:.08em;text-transform:uppercase;background:var(--openbg);color:var(--opentx);padding:2px 7px;border-radius:99px;vertical-align:middle}
+  .jt-row.open .jt-p{color:var(--opentx);font-weight:600}
+  .nowbox{display:none;background:var(--openbg);border:1px solid var(--beslutline);border-radius:12px;padding:11px 14px;margin:0 0 12px}
+  .nowbox.show{display:block}
+  .nowbox .h{font-size:10.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--opentx);margin-bottom:5px}
+  .nowbox .l{font-size:14px;line-height:1.6;color:var(--bodytxt)}
+
+  /* Till toppen */
+  .totop{position:fixed;right:14px;bottom:calc(18px + env(safe-area-inset-bottom));z-index:25;
+    width:44px;height:44px;border-radius:50%;border:none;background:var(--spruce);color:#fff;
+    box-shadow:0 6px 18px rgba(0,0,0,.25);display:flex;align-items:center;justify-content:center;
+    opacity:0;pointer-events:none;transform:translateY(8px);transition:opacity .2s,transform .2s;cursor:pointer}
+  .totop.show{opacity:1;pointer-events:auto;transform:none}
+  html[data-theme="dark"] .totop{background:var(--moss);color:#0E1714}
   .beslut::before{content:"BESLUT";display:block;font-size:9.5px;font-weight:800;
     letter-spacing:.14em;color:var(--moss);margin-bottom:4px}
 
@@ -103,8 +174,8 @@
   #chips{display:flex;gap:7px;overflow-x:auto;padding:12px 14px 4px;-webkit-overflow-scrolling:touch}
   #chips::-webkit-scrollbar{display:none}
   .chip{
-    flex:0 0 auto;border:1px solid var(--line);background:var(--card);color:var(--moss);
-    font-weight:700;font-size:13px;border-radius:20px;padding:7px 13px;cursor:pointer;
+    flex:0 0 auto;min-height:38px;border:1px solid var(--line);background:var(--card);color:var(--moss);
+    font-weight:700;font-size:13px;border-radius:20px;padding:8px 14px;cursor:pointer;
     font-variant-numeric:tabular-nums;
   }
   .chip:hover{border-color:var(--moss)}
@@ -130,8 +201,9 @@
     flex:0 0 auto;font-size:11px;font-weight:700;letter-spacing:.04em;
     padding:4px 8px;border-radius:7px;font-variant-numeric:tabular-nums;white-space:nowrap;
   }
-  .tag-stadgar{background:#E4EFE7;color:var(--moss)}
-  .tag-jaktregler{background:#FBE6D6;color:#B2480C}
+  .tag-stadgar{background:var(--tag-st-bg);color:var(--tag-st-tx)}
+  .tag-jaktregler{background:var(--tag-jr-bg);color:var(--tag-jr-tx)}
+  .tag-jakttider{background:var(--tag-jt-bg);color:var(--tag-jt-tx)}
   .card-title{
     flex:1;font-family:Georgia,"Times New Roman",serif;font-weight:700;
     font-size:16.5px;line-height:1.25;
@@ -145,19 +217,20 @@
   .card-body{display:none;padding:0 16px 6px;animation:fade .18s ease}
   .card.open .card-body{display:block}
   @keyframes fade{from{opacity:0}to{opacity:1}}
-  .card-body p{margin:0 0 12px;font-size:15px;line-height:1.62;color:#27332E}
+  .card-body p{margin:0 0 12px;font-size:15px;line-height:1.62;color:var(--bodytxt)}
+  .card-body a{color:var(--moss);text-decoration:underline;text-underline-offset:2px}
   .card-body p:first-child{margin-top:2px}
   .card-body ul,.card-body ol{margin:0 0 12px;padding-left:22px}
-  .card-body li{font-size:15px;line-height:1.55;margin-bottom:7px;color:#27332E}
+  .card-body li{font-size:15px;line-height:1.55;margin-bottom:7px;color:var(--bodytxt)}
   .sub{font-family:Georgia,serif;font-size:15px;font-weight:700;color:var(--spruce);
     margin:4px 0 9px;padding-bottom:5px;border-bottom:1px solid var(--line)}
-  .note{font-size:13.5px;color:var(--soft);background:#F4F2E7;border-left:3px solid #D9B24A;
+  .note{font-size:13.5px;color:var(--soft);background:var(--notebg);border-left:3px solid var(--noteline);
     padding:9px 12px;border-radius:0 8px 8px 0;line-height:1.5}
   .note::before{content:"✎ ";color:#B98A1F;font-weight:700}
-  .fill{background:#F4F2E7;border-bottom:1.5px dotted #C99A2E;padding:0 3px;border-radius:3px;
-    font-weight:600;color:#7A5A12}
+  .fill{background:var(--fillbg);border-bottom:1.5px dotted #C99A2E;padding:0 3px;border-radius:3px;
+    font-weight:600;color:var(--filltxt)}
 
-  mark{background:var(--amber);color:#5A3A04;border-radius:3px;padding:0 1px}
+  mark{background:var(--markbg);color:var(--marktxt);border-radius:3px;padding:0 1px}
 
   footer{padding:8px 18px 34px;color:var(--soft);font-size:12px;line-height:1.55;text-align:center}
   footer a{color:var(--moss)}
@@ -168,6 +241,7 @@
 </style>
 </head>
 <body>
+<div class="statusfill"></div>
 <div class="wrap">
   <header class="masthead">
     <div class="top">
@@ -175,13 +249,21 @@
         <path d="M17 2 L25 14 L21 14 L28 24 L23 24 L31 35 L3 35 L11 24 L6 24 L13 14 L9 14 Z" fill="#2F5D45"/>
         <rect x="15" y="35" width="4" height="5" fill="#6B4A2A"/>
       </svg>
-      <div>
+      <div class="grow">
         <p class="eyebrow">Viltvårdsområde</p>
         <h1>Gustavsfors VVO</h1>
       </div>
+      <div class="actions">
+        <button class="iconbtn" id="themeBtn" type="button" aria-label="Växla mörkt läge" title="Mörkt/ljust läge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        </button>
+        <button class="iconbtn" id="refreshBtn" type="button" aria-label="Hämta senaste version" title="Uppdatera">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.6-6.4"/><path d="M21 3v6h-6"/></svg>
+        </button>
+      </div>
     </div>
     <div class="blaze-rule"></div>
-    <p class="sub"><b>Jaktregler · Stadgar · Årsmötesprotokoll 2026</b><br>Gustavsfors VVO och Krokfors älgskötselområde. Sök fram en regel eller ett beslut direkt – ute i fält eller inför stämman.</p>
+    <p class="sub"><b>Regler · Stadgar · Årsmötesbeslut · Jakttider</b><br>Sök fram en regel, ett beslut eller en jakttid direkt – ute i fält eller inför stämman.</p>
   </header>
 
   <div class="toolbar" id="toolbar">
@@ -190,7 +272,7 @@
         <circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.5" y2="16.5"></line>
       </svg>
       <input id="q" type="search" inputmode="search" autocomplete="off"
-        placeholder="Sök – t.ex. älgjakt, kalv, avlysning, avgift" aria-label="Sök i regler, stadgar och protokoll">
+        placeholder="Sök – t.ex. älgjakt, rådjur, avlysning, avgift" aria-label="Sök i regler, stadgar, protokoll och jakttider" enterkeyhint="search">
       <button class="clear" id="clear" aria-label="Rensa sökning">×</button>
     </div>
     <div class="tabs" role="tablist" id="tabs">
@@ -198,6 +280,7 @@
       <button class="tab" role="tab" data-doc="stadgar" aria-selected="false">Stadgar</button>
       <button class="tab" role="tab" data-doc="protokoll" aria-selected="false">GVVO <span class="n">-26</span></button>
       <button class="tab" role="tab" data-doc="aso" aria-selected="false">ÄSO <span class="n">-26</span></button>
+      <button class="tab" role="tab" data-doc="jakttider" aria-selected="false">Jakttider</button>
     </div>
   </div>
 
@@ -268,13 +351,25 @@
 <article class="card open" data-id="as-55"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-aso">§ 20–22</span><span class="card-title"><span class="src">Krokfors ÄSO 2026</span>Älgskötselplan, tilldelning och avskjutning</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><p><b>§ 20.</b> Mötet informerades om det pågående arbetet med älgskötselplanen. Styrelsen fick mandat att förhandla med ÄFG och Länsstyrelsen om planen inte skulle godtas.</p><p><b>§ 21.</b> Det utskickade förslaget på avskjutning och tilldelning inför kommande jakt godkändes. Skulle älgskötselplanen revideras kan detta komma att ändras.</p><p><b>§ 22.</b> Målet för avskjutningen är att höja kvaliteten på älgstammen – högre medelålder, högre kalvvikter och högre reproduktion. Det innebär:</p><ul><li>Inriktningen ska vara att skjuta fjolingar och andra mindre djur (rekommenderad maxvikt cirka 120 kg).</li><li>Lag med två vuxna i tilldelning måste skjuta en kalv innan djur nummer två får skjutas.</li><li>Avlysningsjakt på kvarvarande vuxna djur från 15 november.</li><li>Endast lag med minst 50 % av arealkravet för vuxet djur (423 ha) får delta i avlysningsjakten.</li><li>Lag som deltar i avlysningsjakten får inte ligga på minus i kalvavskjutning.</li></ul></div></article>
 <article class="card open" data-id="as-56"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-aso">§ 23</span><span class="card-title"><span class="src">Krokfors ÄSO 2026</span>Rekommendationer om skogsbruk och foder</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><p>Diskussionen på det föregående samrådet resulterade i rekommendationen att ståndortsanpassa skogsbeståndet för att gynna bärristillgången: mer tall på svaga marker, inte röja bort allt lövsly, samt ställa krav på utförare så att rekommendationerna följs.</p></div></article>
 <article class="card open" data-id="as-57"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-aso">§ 24–26</span><span class="card-title"><span class="src">Krokfors ÄSO 2026</span>Medlemsavgift, firmateckning och avslutning</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><div class="beslut"><b>§ 24.</b> Medlemsavgiften ska vara <b>100 kr per rösträtt plus 1 kr per hektar</b>.</div><p><b>§ 25.</b> Mötet fastställde att ordförande och kassör tecknar firman var för sig.</p><p><b>§ 26.</b> Inga övriga frågor. Ordföranden avslutade mötet.</p><p class="note">Vid protokollet: Göran Bryntesson. Justerat av Conny Wessman och Niclas Nätt. Namnformer varierar något i originalet (Håfström/Hofström, Wessman/Vessman) – originalprotokollet gäller.</p></div></article>
+<article class="card open" data-id="ja-58"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-jakttider">Översikt</span><span class="card-title"><span class="src">Jakttider VG-län</span>Jakttider i Västra Götalands län</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><p>Allmänna jakttider enligt <b>jaktförordningen (1987:905), bilaga 1</b>, för Västra Götalands län. Jaktåret löper 1 juli – 30 juni. Tabellen är en sammanställning – kontrollera alltid mot <a href="https://www.naturvardsverket.se/amnesomraden/jakt-och-vilt/jakttider/" target="_blank" rel="noopener">Naturvårdsverket</a> och Länsstyrelsen före jakt.</p><div class="nowbox" data-now><div class="h">Lovligt just nu</div><div class="l"></div></div><p class="note">Inom Gustavsfors VVO gäller dessutom föreningens egna beslut: älgjakt 23–25 oktober, samjakt småvilt 17 oktober, och ingen enskild jakt på dagar då gemensamhetsjakt är utlyst. Se flikarna Regler och GVVO -26.</p><p class="note">Naturvårdsverket lämnade i juni 2026 förslag till regeringen om ändrade jakttider. Tills regeringen beslutat gäller nuvarande tider.</p></div></article>
+<article class="card open" data-id="ja-59"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-jakttider">Klövvilt</span><span class="card-title"><span class="src">Jakttider VG-län</span>Älg, rådjur, dov, kron, vildsvin</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><div class="jt"><div class="jt-row"><div class="jt-a">Älg</div><div class="jt-k">Alla djur – tid beslutas av Länsstyrelsen, kan variera</div><div class="jt-p">8 okt – 31 jan</div><div class="jt-n">Gustavsfors VVO: 23–25 okt. Följ ÄSO:s avskjutningsregler.</div></div><div class="jt-row"><div class="jt-a">Älg</div><div class="jt-k">Årskalv på oregistrerad mark</div><div class="jt-p">8 okt – 12 okt</div></div><div class="jt-row"><div class="jt-a">Rådjur</div><div class="jt-k">Alla djur</div><div class="jt-p">1 okt – 31 jan</div></div><div class="jt-row"><div class="jt-a">Rådjur</div><div class="jt-k">Hornbärande djur</div><div class="jt-p">1 maj – 15 jun<br>16 aug – 30 sep</div></div><div class="jt-row"><div class="jt-a">Rådjur</div><div class="jt-k">Kid</div><div class="jt-p">1 sep – 30 sep</div></div><div class="jt-row"><div class="jt-a">Dovvilt</div><div class="jt-k">Alla djur</div><div class="jt-p">1 okt – 20 okt<br>16 nov – 28 feb</div></div><div class="jt-row"><div class="jt-a">Dovvilt</div><div class="jt-k">Hind och kalv</div><div class="jt-p">21 okt – 15 nov<br>1 mar – 31 mar</div></div><div class="jt-row"><div class="jt-a">Dovvilt</div><div class="jt-k">Hornbärande djur och kalv</div><div class="jt-p">1 sep – 30 sep</div></div><div class="jt-row"><div class="jt-a">Kronvilt</div><div class="jt-k">Årskalv, utanför kronhjortsskötselområde</div><div class="jt-p">16 aug – 31 jan</div></div><div class="jt-row"><div class="jt-a">Kronvilt</div><div class="jt-k">Hind och kalv, inom skötselområde</div><div class="jt-p">16 aug – 28 feb</div></div><div class="jt-row"><div class="jt-a">Kronvilt</div><div class="jt-k">Hjort, inom skötselområde</div><div class="jt-p">8 okt – 31 jan</div></div><div class="jt-row"><div class="jt-a">Vildsvin</div><div class="jt-k">Alla utom sugga med randiga/bruna kultingar</div><div class="jt-p">1 apr – 31 jan</div></div><div class="jt-row"><div class="jt-a">Vildsvin</div><div class="jt-k">Årsunge</div><div class="jt-p">1 jul – 30 jun</div></div><div class="jt-row"><div class="jt-a">Mufflon</div><div class="jt-k">Alla djur</div><div class="jt-p">1 jul – 30 jun</div></div></div><p class="note">Älg, rådjur, dov- och kronvilt: jakt tillåten från 1 timme före soluppgång till 1 timme efter solnedgång. Under timmen efter solnedgång endast smyg- eller vaktjakt. Vildsvin och mufflon: hela dygnet.</p></div></article>
+<article class="card open" data-id="ja-60"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-jakttider">Småvilt</span><span class="card-title"><span class="src">Jakttider VG-län</span>Räv, grävling, mård, hare, bäver</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><div class="jt"><div class="jt-row"><div class="jt-a">Rödräv</div><div class="jt-k">Alla djur</div><div class="jt-p">1 aug – 15 mar</div></div><div class="jt-row"><div class="jt-a">Grävling</div><div class="jt-k">Alla djur</div><div class="jt-p">1 aug – 31 jan</div></div><div class="jt-row"><div class="jt-a">Skogsmård</div><div class="jt-k">Alla djur</div><div class="jt-p">1 sep – 28 feb</div></div><div class="jt-row"><div class="jt-a">Iller</div><div class="jt-k">Alla djur</div><div class="jt-p">1 sep – 28 feb</div></div><div class="jt-row"><div class="jt-a">Skogshare</div><div class="jt-k">Alla djur</div><div class="jt-p">1 sep – 15 feb</div></div><div class="jt-row"><div class="jt-a">Fälthare</div><div class="jt-k">Alla djur</div><div class="jt-p">1 sep – 28 feb</div></div><div class="jt-row"><div class="jt-a">Bäver</div><div class="jt-k">Alla djur</div><div class="jt-p">1 okt – 10 maj</div></div></div><p class="note">Jakt tillåten hela dygnet för samtliga arter ovan.</p></div></article>
+<article class="card open" data-id="ja-61"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-jakttider">Skogsfågel</span><span class="card-title"><span class="src">Jakttider VG-län</span>Orre, tjäder, fasan, morkulla, duva</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><div class="jt"><div class="jt-row"><div class="jt-a">Orre och tjäder</div><div class="jt-k">Alla fåglar</div><div class="jt-p">25 aug – 30 sep</div></div><div class="jt-row"><div class="jt-a">Orre och tjäder</div><div class="jt-k">Endast tuppar</div><div class="jt-p">1 jan – 31 jan</div></div><div class="jt-row"><div class="jt-a">Fasan</div><div class="jt-k">Alla fåglar</div><div class="jt-p">1 okt – 31 jan</div></div><div class="jt-row"><div class="jt-a">Rapphöna</div><div class="jt-k">Alla fåglar</div><div class="jt-p">16 sep – 30 nov</div></div><div class="jt-row"><div class="jt-a">Morkulla</div><div class="jt-k">Alla fåglar</div><div class="jt-p">11 sep – 31 dec</div></div><div class="jt-row"><div class="jt-a">Ringduva</div><div class="jt-k">Alla fåglar</div><div class="jt-p">16 aug – 31 dec</div></div><div class="jt-row"><div class="jt-a">Nötskrika</div><div class="jt-k">Alla fåglar</div><div class="jt-p">21 aug – 10 mar</div></div></div><p class="note">Jakt tillåten hela dygnet. Järpe och ripa har ingen allmän jakttid i Västra Götaland.</p></div></article>
+<article class="card open" data-id="ja-62"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-jakttider">Sjöfågel</span><span class="card-title"><span class="src">Jakttider VG-län</span>Änder, gäss och dykänder</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><div class="jt"><div class="jt-row"><div class="jt-a">Gräsand</div><div class="jt-k">Alla fåglar</div><div class="jt-p">21 aug – 31 dec</div></div><div class="jt-row"><div class="jt-a">Kricka och bläsand</div><div class="jt-k">Alla fåglar</div><div class="jt-p">21 aug – 30 nov</div></div><div class="jt-row"><div class="jt-a">Knipa och storskrake</div><div class="jt-k">Alla fåglar</div><div class="jt-p">21 aug – 31 jan</div></div><div class="jt-row"><div class="jt-a">Vigg</div><div class="jt-k">Alla fåglar</div><div class="jt-p">21 aug – 31 jan</div></div><div class="jt-row"><div class="jt-a">Sjöorre</div><div class="jt-k">Alla fåglar</div><div class="jt-p">21 sep – 31 jan</div></div><div class="jt-row"><div class="jt-a">Kanadagås</div><div class="jt-k">Alla fåglar</div><div class="jt-p">11 aug – 31 jan</div></div><div class="jt-row"><div class="jt-a">Grågås</div><div class="jt-k">Alla fåglar</div><div class="jt-p">11 aug – 31 jan</div></div></div><p class="note">Jakt tillåten från 1 timme före soluppgång till 1 timme efter solnedgång. Sädgås, ejder och bläsgås har ingen allmän jakttid i Västra Götaland.</p></div></article>
+<article class="card open" data-id="ja-63"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-jakttider">Kråkfågel</span><span class="card-title"><span class="src">Jakttider VG-län</span>Kråka, kaja, skata och måsar</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><div class="jt"><div class="jt-row"><div class="jt-a">Kråka, kaja, skata</div><div class="jt-k">Alla fåglar</div><div class="jt-p">1 jul – 15 apr</div></div><div class="jt-row"><div class="jt-a">Gråtrut</div><div class="jt-k">Alla fåglar</div><div class="jt-p">1 aug – 31 mar</div></div><div class="jt-row"><div class="jt-a">Fiskmås</div><div class="jt-k">Alla fåglar</div><div class="jt-p">11 aug – 28 feb</div></div></div><p class="note">Jakt tillåten hela dygnet. Råka har allmän jakttid endast i Halland och Skåne.</p></div></article>
+<article class="card open" data-id="ja-64"><button class="card-head" type="button" aria-expanded="true"><span class="tag tag-jakttider">Rovdjur</span><span class="card-title"><span class="src">Jakttider VG-län</span>Björn, varg, lo och järv</span><span class="chev" aria-hidden="true"></span></button><div class="card-body"><p>Björn, varg, lo och järv har <b>ingen allmän jakttid</b>. Licensjakt beslutas år för år av Naturvårdsverket eller Länsstyrelsen, med kvot per län och särskilda villkor. Skyddsjakt kan beviljas i enskilda fall.</p><p class="note">Enligt stadgarnas § 3 får jaktstämman besluta om områdesjakt efter björn, järv, varg, lo och vildsvin endast om det uppenbart behövs för att begränsa skador. Sådant beslut fattas årligen på årsstämman.</p></div></article>
 </div>
   </main>
 
+  <button class="totop" id="totop" type="button" aria-label="Till toppen">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"/><path d="M5 12l7-7 7 7"/></svg>
+  </button>
   <footer>
     Sammanställt ur föreningens jaktregler, normalstadgar (SJF, dnr 27-45408-2001) och årsmötesprotokollet 2026-07-09.<br>
     Samt protokoll från Krokfors älgskötselområdes årsmöte 2026-04-12.<br>
-    Vid tveksamhet gäller alltid originalprotokollen.<br>
+    Jakttider enligt jaktförordningen bilaga 1 – kontrollera alltid mot Naturvårdsverket och Länsstyrelsen.<br>
+    Vid tveksamhet gäller alltid originalhandlingarna.<br>
+    <span style="opacity:.75">Version 2026-09-07</span><br>
     Handskrivna ifyllnader är <span class="fill">markerade</span> och bör verifieras mot originalet. Lag (2000:592) om viltvårdsområden gäller i övrigt.
   </footer>
 </div>
@@ -587,22 +682,98 @@ const DATA = [
     {t:"beslut",html:"<b>§ 24.</b> Medlemsavgiften ska vara <b>100 kr per rösträtt plus 1 kr per hektar</b>."},
     {t:"p",html:"<b>§ 25.</b> Mötet fastställde att ordförande och kassör tecknar firman var för sig."},
     {t:"p",html:"<b>§ 26.</b> Inga övriga frågor. Ordföranden avslutade mötet."},
-    {t:"note",html:"Vid protokollet: Göran Bryntesson. Justerat av Conny Wessman och Niclas Nätt. Namnformer varierar något i originalet (Håfström/Hofström, Wessman/Vessman) – originalprotokollet gäller."}]}
+    {t:"note",html:"Vid protokollet: Göran Bryntesson. Justerat av Conny Wessman och Niclas Nätt. Namnformer varierar något i originalet (Håfström/Hofström, Wessman/Vessman) – originalprotokollet gäller."}]},
+  /* -------- JAKTTIDER – VÄSTRA GÖTALANDS LÄN -------- */
+  {doc:"jakttider",tag:"Översikt",title:"Jakttider i Västra Götalands län",blocks:[
+    {t:"p",html:"Allmänna jakttider enligt <b>jaktförordningen (1987:905), bilaga 1</b>, för Västra Götalands län. Jaktåret löper 1 juli – 30 juni. Tabellen är en sammanställning – kontrollera alltid mot <a href=\"https://www.naturvardsverket.se/amnesomraden/jakt-och-vilt/jakttider/\" target=\"_blank\" rel=\"noopener\">Naturvårdsverket</a> och Länsstyrelsen före jakt."},
+    {t:"now"},
+    {t:"note",html:"Inom Gustavsfors VVO gäller dessutom föreningens egna beslut: älgjakt 23–25 oktober, samjakt småvilt 17 oktober, och ingen enskild jakt på dagar då gemensamhetsjakt är utlyst. Se flikarna Regler och GVVO -26."},
+    {t:"note",html:"Naturvårdsverket lämnade i juni 2026 förslag till regeringen om ändrade jakttider. Tills regeringen beslutat gäller nuvarande tider."}]},
+
+  {doc:"jakttider",tag:"Klövvilt",title:"Älg, rådjur, dov, kron, vildsvin",blocks:[
+    {t:"jt",rows:[
+      {a:"Älg",k:"Alla djur – tid beslutas av Länsstyrelsen, kan variera",p:[[8,10,31,1]],n:"Gustavsfors VVO: 23–25 okt. Följ ÄSO:s avskjutningsregler."},
+      {a:"Älg",k:"Årskalv på oregistrerad mark",p:[[8,10,12,10]]},
+      {a:"Rådjur",k:"Alla djur",p:[[1,10,31,1]]},
+      {a:"Rådjur",k:"Hornbärande djur",p:[[1,5,15,6],[16,8,30,9]]},
+      {a:"Rådjur",k:"Kid",p:[[1,9,30,9]]},
+      {a:"Dovvilt",k:"Alla djur",p:[[1,10,20,10],[16,11,28,2]]},
+      {a:"Dovvilt",k:"Hind och kalv",p:[[21,10,15,11],[1,3,31,3]]},
+      {a:"Dovvilt",k:"Hornbärande djur och kalv",p:[[1,9,30,9]]},
+      {a:"Kronvilt",k:"Årskalv, utanför kronhjortsskötselområde",p:[[16,8,31,1]]},
+      {a:"Kronvilt",k:"Hind och kalv, inom skötselområde",p:[[16,8,28,2]]},
+      {a:"Kronvilt",k:"Hjort, inom skötselområde",p:[[8,10,31,1]]},
+      {a:"Vildsvin",k:"Alla utom sugga med randiga/bruna kultingar",p:[[1,4,31,1]]},
+      {a:"Vildsvin",k:"Årsunge",p:[[1,7,30,6]]},
+      {a:"Mufflon",k:"Alla djur",p:[[1,7,30,6]]}]},
+    {t:"note",html:"Älg, rådjur, dov- och kronvilt: jakt tillåten från 1 timme före soluppgång till 1 timme efter solnedgång. Under timmen efter solnedgång endast smyg- eller vaktjakt. Vildsvin och mufflon: hela dygnet."}]},
+
+  {doc:"jakttider",tag:"Småvilt",title:"Räv, grävling, mård, hare, bäver",blocks:[
+    {t:"jt",rows:[
+      {a:"Rödräv",k:"Alla djur",p:[[1,8,15,3]]},
+      {a:"Grävling",k:"Alla djur",p:[[1,8,31,1]]},
+      {a:"Skogsmård",k:"Alla djur",p:[[1,9,28,2]]},
+      {a:"Iller",k:"Alla djur",p:[[1,9,28,2]]},
+      {a:"Skogshare",k:"Alla djur",p:[[1,9,15,2]]},
+      {a:"Fälthare",k:"Alla djur",p:[[1,9,28,2]]},
+      {a:"Bäver",k:"Alla djur",p:[[1,10,10,5]]}]},
+    {t:"note",html:"Jakt tillåten hela dygnet för samtliga arter ovan."}]},
+
+  {doc:"jakttider",tag:"Skogsfågel",title:"Orre, tjäder, fasan, morkulla, duva",blocks:[
+    {t:"jt",rows:[
+      {a:"Orre och tjäder",k:"Alla fåglar",p:[[25,8,30,9]]},
+      {a:"Orre och tjäder",k:"Endast tuppar",p:[[1,1,31,1]]},
+      {a:"Fasan",k:"Alla fåglar",p:[[1,10,31,1]]},
+      {a:"Rapphöna",k:"Alla fåglar",p:[[16,9,30,11]]},
+      {a:"Morkulla",k:"Alla fåglar",p:[[11,9,31,12]]},
+      {a:"Ringduva",k:"Alla fåglar",p:[[16,8,31,12]]},
+      {a:"Nötskrika",k:"Alla fåglar",p:[[21,8,10,3]]}]},
+    {t:"note",html:"Jakt tillåten hela dygnet. Järpe och ripa har ingen allmän jakttid i Västra Götaland."}]},
+
+  {doc:"jakttider",tag:"Sjöfågel",title:"Änder, gäss och dykänder",blocks:[
+    {t:"jt",rows:[
+      {a:"Gräsand",k:"Alla fåglar",p:[[21,8,31,12]]},
+      {a:"Kricka och bläsand",k:"Alla fåglar",p:[[21,8,30,11]]},
+      {a:"Knipa och storskrake",k:"Alla fåglar",p:[[21,8,31,1]]},
+      {a:"Vigg",k:"Alla fåglar",p:[[21,8,31,1]]},
+      {a:"Sjöorre",k:"Alla fåglar",p:[[21,9,31,1]]},
+      {a:"Kanadagås",k:"Alla fåglar",p:[[11,8,31,1]]},
+      {a:"Grågås",k:"Alla fåglar",p:[[11,8,31,1]]}]},
+    {t:"note",html:"Jakt tillåten från 1 timme före soluppgång till 1 timme efter solnedgång. Sädgås, ejder och bläsgås har ingen allmän jakttid i Västra Götaland."}]},
+
+  {doc:"jakttider",tag:"Kråkfågel",title:"Kråka, kaja, skata och måsar",blocks:[
+    {t:"jt",rows:[
+      {a:"Kråka, kaja, skata",k:"Alla fåglar",p:[[1,7,15,4]]},
+      {a:"Gråtrut",k:"Alla fåglar",p:[[1,8,31,3]]},
+      {a:"Fiskmås",k:"Alla fåglar",p:[[11,8,28,2]]}]},
+    {t:"note",html:"Jakt tillåten hela dygnet. Råka har allmän jakttid endast i Halland och Skåne."}]},
+
+  {doc:"jakttider",tag:"Rovdjur",title:"Björn, varg, lo och järv",blocks:[
+    {t:"p",html:"Björn, varg, lo och järv har <b>ingen allmän jakttid</b>. Licensjakt beslutas år för år av Naturvårdsverket eller Länsstyrelsen, med kvot per län och särskilda villkor. Skyddsjakt kan beviljas i enskilda fall."},
+    {t:"note",html:"Enligt stadgarnas § 3 får jaktstämman besluta om områdesjakt efter björn, järv, varg, lo och vildsvin endast om det uppenbart behövs för att begränsa skador. Sådant beslut fattas årligen på årsstämman."}]}
 ];
 
 /* ===== Logik ===== */
 const strip = s => (""+s).replace(/<[^>]*>/g," ");
+const MON=["","jan","feb","mar","apr","maj","jun","jul","aug","sep","okt","nov","dec"];
+const perLabel = p => `${p[0]} ${MON[p[1]]} – ${p[2]} ${MON[p[3]]}`;
+function perOpen(p, d){
+  const t=d.getMonth()+1, day=d.getDate();
+  const a=p[1]*100+p[0], b=p[3]*100+p[2], n=t*100+day;
+  return a<=b ? (n>=a && n<=b) : (n>=a || n<=b);
+}
 DATA.forEach((it,i)=>{
   it.id = it.doc.slice(0,2)+"-"+i;
   let txt = it.tag+" "+it.title+" ";
   it.blocks.forEach(b=>{
     if(b.html) txt += strip(b.html)+" ";
     if(b.items) txt += b.items.map(strip).join(" ")+" ";
+    if(b.rows) txt += b.rows.map(r=>r.a+" "+r.k+" "+(r.n||"")+" "+r.p.map(perLabel).join(" ")).join(" ")+" ";
   });
   it._text = txt.toLowerCase();
 });
 
-const DOCNAME = {jaktregler:"Jaktregler", stadgar:"Stadgar", protokoll:"Årsmöte GVVO 2026", aso:"Krokfors ÄSO 2026"};
+const DOCNAME = {jaktregler:"Jaktregler", stadgar:"Stadgar", protokoll:"Årsmöte GVVO 2026", aso:"Krokfors ÄSO 2026", jakttider:"Jakttider VG-län"};
 let state = {tab:"jaktregler", q:"", open:new Set()};
 
 const list = document.getElementById("list");
@@ -616,6 +787,15 @@ function renderBlock(b){
   if(b.t==="sub") return `<h4 class="sub">${b.html}</h4>`;
   if(b.t==="note")return `<p class="note">${b.html}</p>`;
   if(b.t==="beslut")return `<div class="beslut">${b.html}</div>`;
+  if(b.t==="now")   return `<div class="nowbox" data-now><div class="h">Lovligt just nu</div><div class="l"></div></div>`;
+  if(b.t==="jt"){
+    const today=new Date();
+    return `<div class="jt">`+b.rows.map(r=>{
+      const open=r.p.some(p=>perOpen(p,today));
+      return `<div class="jt-row${open?" open":""}"><div class="jt-a">${r.a}</div><div class="jt-k">${r.k}</div>`+
+        `<div class="jt-p">${r.p.map(perLabel).join("<br>")}</div>`+(r.n?`<div class="jt-n">${r.n}</div>`:"")+`</div>`;
+    }).join("")+`</div>`;
+  }
   if(b.t==="ul")  return `<ul>${b.items.map(x=>`<li>${x}</li>`).join("")}</ul>`;
   if(b.t==="ol")  return `<ol>${b.items.map(x=>`<li>${x}</li>`).join("")}</ol>`;
   return "";
@@ -687,12 +867,26 @@ function render(){
   }
 
   // I årsmötesfliken fälls översikten ut automatiskt
-  if(!q && (state.tab==="protokoll"||state.tab==="aso") && state.open.size===0 && items[0]){
+  if(!q && (state.tab==="protokoll"||state.tab==="aso"||state.tab==="jakttider") && state.open.size===0 && items[0]){
     state.open.add(items[0].id);
   }
 
   list.innerHTML = items.map(it => cardHTML(it, q? true : state.open.has(it.id), !!q)).join("");
   if(q) highlight(list, q);
+  fillNow();
+}
+
+function fillNow(){
+  const box=list.querySelector("[data-now]"); if(!box) return;
+  const today=new Date(), seen=new Set(), out=[];
+  DATA.filter(d=>d.doc==="jakttider").forEach(d=>d.blocks.forEach(b=>{
+    if(b.t!=="jt") return;
+    b.rows.forEach(r=>{ if(r.p.some(p=>perOpen(p,today)) && !seen.has(r.a)){ seen.add(r.a); out.push(r.a); } });
+  }));
+  const dstr=today.toLocaleDateString("sv-SE",{day:"numeric",month:"long"});
+  box.querySelector(".h").textContent="Lovligt just nu – "+dstr;
+  box.querySelector(".l").textContent=out.length? out.join(" · ") : "Inga allmänna jakttider öppna idag.";
+  box.classList.add("show");
 }
 
 /* events */
@@ -703,6 +897,7 @@ document.getElementById("tabs").addEventListener("click", e=>{
   const t=e.target.closest(".tab"); if(!t) return;
   state.tab=t.dataset.doc;
   [...document.querySelectorAll(".tab")].forEach(x=>x.setAttribute("aria-selected", x===t));
+  t.scrollIntoView({inline:"center",block:"nearest",behavior:"smooth"});
   state.open.clear();
   render();
   window.scrollTo({top:0});
@@ -725,8 +920,40 @@ chips.addEventListener("click", e=>{
   if(el){ el.scrollIntoView({behavior:"smooth",block:"start"}); }
 });
 
-const tb=document.getElementById("toolbar");
-window.addEventListener("scroll", ()=>{ tb.classList.toggle("scrolled", window.scrollY>8); }, {passive:true});
+const tb=document.getElementById("toolbar"), totop=document.getElementById("totop");
+window.addEventListener("scroll", ()=>{
+  tb.classList.toggle("scrolled", window.scrollY>8);
+  totop.classList.toggle("show", window.scrollY>600);
+}, {passive:true});
+totop.addEventListener("click", ()=>window.scrollTo({top:0,behavior:"smooth"}));
+
+/* Dölj tangentbordet vid Enter */
+qInput.addEventListener("keydown", e=>{ if(e.key==="Enter") qInput.blur(); });
+
+/* ===== Mörkt läge ===== */
+const metaTheme=document.getElementById("metaTheme");
+function applyTheme(t){
+  document.documentElement.setAttribute("data-theme", t);
+  metaTheme.setAttribute("content", t==="dark" ? "#0E1714" : "#16302A");
+  try{ localStorage.setItem("gvvo-theme", t); }catch(e){}
+}
+(function(){
+  let t=null; try{ t=localStorage.getItem("gvvo-theme"); }catch(e){}
+  if(!t) t = (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
+  applyTheme(t);
+})();
+document.getElementById("themeBtn").addEventListener("click", ()=>{
+  applyTheme(document.documentElement.getAttribute("data-theme")==="dark" ? "light" : "dark");
+});
+
+/* ===== Uppdatera (hämta senaste version, förbi cache) ===== */
+document.getElementById("refreshBtn").addEventListener("click", function(){
+  this.classList.add("spin");
+  const u=new URL(location.href); u.searchParams.set("r", Date.now());
+  location.replace(u.toString());
+});
+/* Städa bort ?r= ur adressfältet efter uppdatering */
+if(location.search.indexOf("r=")>-1){ try{ history.replaceState(null,"",location.pathname); }catch(e){} }
 
 render();
 </script>
