@@ -1,0 +1,13 @@
+{
+  "name": "gustavsfors-vvo",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Gustavsfors VVO:s mobilanpassade jaktguide",
+  "scripts": {
+    "test": "node tests/verify.cjs",
+    "test:update": "node tests/update.cjs"
+  },
+  "devDependencies": {
+    "playwright": "1.62.1"
+  }
+}
