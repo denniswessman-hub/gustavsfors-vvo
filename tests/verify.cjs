@@ -35,7 +35,3 @@ async function go(page,hash){await page.goto(base+'#'+hash);await page.waitForFu
  const browser=await chromium.launch();const context=await browser.newContext({viewport:{width:390,height:844},javaScriptEnabled:false});const page=await context.newPage();await page.goto(base);assert.equal(await page.locator('.fallback .card').count(),73);results.push('73 fallback sections without JavaScript');await browser.close();
  fs.writeFileSync(out+'/test-results.json',JSON.stringify({base,passed:results.length,results},null,2));console.log('TOTAL',results.length,'passed');
 })().catch(e=>{console.error(e);process.exit(1)});
-
-
-
-
